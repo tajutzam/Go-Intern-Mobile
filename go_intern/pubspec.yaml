@@ -32,6 +32,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.10.0
   get: ^4.6.5
   introduction_screen: ^3.0.2
   lottie: ^1.4.3
@@ -66,15 +67,14 @@ flutter:
   # example:
   fonts:
     - family: unchen
-      fonts:
-        - asset: fonts/Uchen-Regular.tff
-        # - asset: fonts/Schyler-Italic.ttf
-        #   style: italic
+      fonts: null
+      # - asset: fonts/Uchen-Regular.tff
+      # - asset: fonts/Schyler-Italic.ttf
+      #   style: italic
     - family: Times
       fonts:
         - asset: fonts/TenorSans-Regular.ttf
         # - asset: fonts/TrajanPro_Bold.ttf
         #   weight: 700
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

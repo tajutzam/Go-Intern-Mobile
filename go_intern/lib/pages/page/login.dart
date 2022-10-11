@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
+class LoginPage extends GetWidget<ValidasiController> {
+  var controller = Get.put(ValidasiController());
   @override
   Widget build(BuildContext context) {
+    var isHidden = true;
     return Scaffold(
       backgroundColor: ColorHelpers.backgroundColorValidasi,
       body: ListView(
@@ -40,27 +41,39 @@ class LoginPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            child: TextField(
-              autocorrect: true,
-              decoration: InputDecoration(
-                  label: Text("Masukan Password"),
-                  filled: true,
-                  fillColor: ColorHelpers.fieldColor,
-                  border: OutlineInputBorder()),
+            child: Obx(
+              () => TextField(
+                obscureText: controller.isObsecure.value,
+                autocorrect: false,
+                decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                        onPressed: () {
+                          print(controller.isObsecure.value);
+                          controller.isObsecure.value =
+                              !controller.isObsecure.value;
+                        },
+                        icon: controller.isObsecure.value
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off)),
+                    label: Text("Masukan Password"),
+                    filled: true,
+                    fillColor: ColorHelpers.fieldColor,
+                    border: OutlineInputBorder()),
+              ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               "Lupa Password ?",
               textAlign: TextAlign.end,
               style: TextStyle(color: Color(0xFF004AAD), fontFamily: "Times"),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -71,18 +84,37 @@ class LoginPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                       primary: ColorHelpers.backgroundBlueNew),
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     "Login",
                     style: TextStyle(fontSize: 20),
                   )),
             ),
           ),
+          const SizedBox(
+            height: 10,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text("Baru di go Intern ? click me"),
+            child: InkWell(
+              child: RichText(
+                  text: TextSpan(children: [
+                const TextSpan(
+                  text: "Baru Di Go Intern?",
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: "Click Me",
+                  style: TextStyle(color: ColorHelpers.backgroundBlueNew),
+                )
+              ])),
+            ),
           )
         ],
       ),
     );
   }
+}
+
+class ValidasiController extends GetxController {
+  var isObsecure = true.obs;
 }
