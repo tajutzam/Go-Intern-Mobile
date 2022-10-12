@@ -53,8 +53,8 @@ class LoginPage extends GetWidget<ValidasiController> {
                               !controller.isObsecure.value;
                         },
                         icon: controller.isObsecure.value
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off)),
+                            ? Icon(Icons.visibility_off)
+                            : Icon(Icons.visibility)),
                     label: Text("Masukan Password"),
                     filled: true,
                     fillColor: ColorHelpers.fieldColor,
@@ -65,12 +65,15 @@ class LoginPage extends GetWidget<ValidasiController> {
           const SizedBox(
             height: 10,
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-              "Lupa Password ?",
-              textAlign: TextAlign.end,
-              style: TextStyle(color: Color(0xFF004AAD), fontFamily: "Times"),
+            child: InkWell(
+              onTap: () => Navigator.pushNamed(context, "/forgot-password"),
+              child: Text(
+                "Lupa Password ?",
+                textAlign: TextAlign.end,
+                style: TextStyle(color: Color(0xFF004AAD), fontFamily: "Times"),
+              ),
             ),
           ),
           const SizedBox(
@@ -83,7 +86,9 @@ class LoginPage extends GetWidget<ValidasiController> {
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: ColorHelpers.backgroundBlueNew),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/dashboard");
+                  },
                   child: const Text(
                     "Login",
                     style: TextStyle(fontSize: 20),
@@ -96,6 +101,7 @@ class LoginPage extends GetWidget<ValidasiController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: InkWell(
+              onTap: () => Navigator.pushNamed(context, "/register"),
               child: RichText(
                   text: TextSpan(children: [
                 const TextSpan(

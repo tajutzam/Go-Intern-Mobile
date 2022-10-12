@@ -30,12 +30,15 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
+  dropdown_button2: ^1.8.5
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
   get: ^4.6.5
   introduction_screen: ^3.0.2
   lottie: ^1.4.3
+  dropdown_search: ^5.0.3
+  intl: 0.17.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -66,15 +69,15 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: unchen
-      fonts: null
-      # - asset: fonts/Uchen-Regular.tff
+    - family: ubuntu
+      fonts: 
+        - asset: fonts/UbuntuCondensed-Regular.ttf
       # - asset: fonts/Schyler-Italic.ttf
       #   style: italic
     - family: Times
       fonts:
         - asset: fonts/TenorSans-Regular.ttf
-        # - asset: fonts/TrajanPro_Bold.ttf
+        # - asset: fonts/UbuntuCondensed-Regular.ttf
         #   weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
