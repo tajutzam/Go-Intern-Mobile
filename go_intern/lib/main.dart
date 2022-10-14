@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_intern/pages/page/detail_magang.dart';
-import 'package:go_intern/pages/page/homepage.dart';
-import 'package:go_intern/pages/page/introduction_screnn.dart';
-import 'package:go_intern/pages/page/login.dart';
-import 'package:go_intern/pages/page/lupapassword.dart';
-import 'package:go_intern/pages/page/profile/pendidikan.dart';
-import 'package:go_intern/pages/page/profile/penghargaan.dart';
-import 'package:go_intern/pages/page/profile/skill.dart';
-import 'package:go_intern/pages/page/profile/tentang_saya.dart';
-import 'package:go_intern/pages/page/register.dart';
-import 'package:go_intern/pages/splash/splash.dart';
+import 'package:go_intern/view/page/detail_magang.dart';
+import 'package:go_intern/view/page/homepage.dart';
+import 'package:go_intern/view/page/introduction_screnn.dart';
+import 'package:go_intern/view/page/login.dart';
+import 'package:go_intern/view/page/lupapassword.dart';
+import 'package:go_intern/view/page/profile/pendidikan.dart';
+import 'package:go_intern/view/page/profile/penghargaan.dart';
+import 'package:go_intern/view/page/profile/skill.dart';
+import 'package:go_intern/view/page/profile/tentang_saya.dart';
+import 'package:go_intern/view/page/register.dart';
+import 'package:go_intern/view/splash/splash.dart';
 
 void main(List<String> args) {
   runApp(const GoInternApp());

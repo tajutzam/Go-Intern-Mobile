@@ -8,4 +8,6 @@ class ColorHelpers {
   static final Color colorSplash = Color(0xFFDEE1FF);
   static final Color colorNavbarProfile = Color(0xFFA7B0FF);
   static final Color colorBlackText = Color(0xFF272727);
+  static final Color yelloColor = Color(0xFFE7EA5C);
+  static final Color colorBot = Color.fromARGB(255, 88, 88, 88);
 }

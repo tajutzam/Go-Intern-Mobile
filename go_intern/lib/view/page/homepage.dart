@@ -3,9 +3,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
-import 'package:go_intern/pages/page/dashboard.dart';
-import 'package:go_intern/pages/page/profile/profile.dart';
-import 'package:go_intern/pages/page/recent_apply/recent_applay.dart';
+import 'package:go_intern/view/page/dashboard.dart';
+import 'package:go_intern/view/page/magang.dart';
+import 'package:go_intern/view/page/profile/profile.dart';
+import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
 
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
@@ -33,6 +34,8 @@ class HomePageScrenn extends StatelessWidget {
           child: BottomNavigationBar(
             // ignore: prefer_const_literals_to_create_immutables
             items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home), label: "Dashboard"),
               const BottomNavigationBarItem(
                   icon: Icon(Icons.work), label: "Magang"),
               const BottomNavigationBarItem(
@@ -43,6 +46,9 @@ class HomePageScrenn extends StatelessWidget {
             currentIndex: controller.tabIndex.value,
             onTap: controller.changeTabIndex,
             selectedItemColor: ColorHelpers.backgroundBlueNew,
+            unselectedItemColor: ColorHelpers.colorBot,
+            unselectedLabelStyle: TextStyle(color: ColorHelpers.colorBot),
+            showUnselectedLabels: true,
           ),
         ));
   }
@@ -62,7 +68,12 @@ class HomePageScrenn extends StatelessWidget {
           () => IndexedStack(
             index: controller.tabIndex.value,
             // ignore: prefer_const_literals_to_create_immutables
-            children: [DashboardScrenn(), RecentApplyPage(), ProfilePage()],
+            children: [
+              DashboardScrenn(),
+              Magang(),
+              RecentApplyPage(),
+              ProfilePage()
+            ],
           ),
         ),
       ),

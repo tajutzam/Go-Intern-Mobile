@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
-import 'package:go_intern/pages/page/dashboard_content/magang_terbaru.dart';
-import 'package:go_intern/pages/page/dashboard_content/magang_untukmu.dart';
+import 'package:go_intern/view/page/dashboard_content/magang_terbaru.dart';
+import 'package:go_intern/view/page/dashboard_content/magang_untukmu.dart';
 
-class DashboardScrenn extends StatelessWidget {
+class Magang extends StatelessWidget {
   var c = Get.put(ControllerTabbar());
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class DashboardScrenn extends StatelessWidget {
       backgroundColor: ColorHelpers.backgroundOfIntroduction,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: ColorHelpers.yelloColor,
         automaticallyImplyLeading: false,
         title: SizedBox(
           height: 50,
@@ -20,7 +20,7 @@ class DashboardScrenn extends StatelessWidget {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               filled: true,
-              fillColor: ColorHelpers.fieldColor,
+              fillColor: Colors.white,
               labelText: "Cari Kriteria Magang . .",
               labelStyle:
                   TextStyle(fontFamily: "Times", fontWeight: FontWeight.w600),

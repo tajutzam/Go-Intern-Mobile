@@ -70,11 +70,12 @@ class _PendidikanState extends State<Pendidikan> {
                       ),
                       child: DropdownSearch<String>(
                         popupProps: PopupProps.menu(
+                          showSearchBox: true,
                           showSelectedItems: true,
                         ),
                         items: [
                           "SMK",
-                          "SMA",
+                          "SMA", 
                           "SMP",
                           'DIPLOMA III',
                           'DIPLOMA IV',

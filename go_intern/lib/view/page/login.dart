@@ -36,11 +36,11 @@ class LoginPage extends GetWidget<ValidasiController> {
                   border: OutlineInputBorder()),
             ),
           ),
-          SizedBox(
+         const  SizedBox(
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Obx(
               () => TextField(
                 obscureText: controller.isObsecure.value,
