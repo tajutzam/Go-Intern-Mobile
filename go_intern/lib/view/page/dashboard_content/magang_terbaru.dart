@@ -7,7 +7,9 @@ class MagangTerbaru extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      separatorBuilder: (context, index) => Divider(),
+      separatorBuilder: (context, index) => Divider(
+        color: ColorHelpers.backgroundOfIntroduction,
+      ),
       itemCount: 10,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.all(8.0),
@@ -15,7 +17,14 @@ class MagangTerbaru extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(6))),
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 0.5,
+                  offset: Offset(5, 5),
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+              ]),
           child: ListTile(
             title: Text("oke"),
             leading: FlutterLogo(),
@@ -25,7 +34,7 @@ class MagangTerbaru extends StatelessWidget {
               width: 140,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: ColorHelpers.backgroundBlueNew),
+                      backgroundColor: ColorHelpers.backgroundBlueNew),
                   onPressed: () {
                     Navigator.pushNamed(context, "/detailmagang");
                   },

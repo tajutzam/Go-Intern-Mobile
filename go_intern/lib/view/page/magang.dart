@@ -9,10 +9,10 @@ class Magang extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorHelpers.backgroundOfIntroduction,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: ColorHelpers.yelloColor,
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: SizedBox(
           height: 50,
@@ -20,7 +20,7 @@ class Magang extends StatelessWidget {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: ColorHelpers.fieldColor,
               labelText: "Cari Kriteria Magang . .",
               labelStyle:
                   TextStyle(fontFamily: "Times", fontWeight: FontWeight.w600),

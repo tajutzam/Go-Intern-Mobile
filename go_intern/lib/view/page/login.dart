@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 
-class LoginPage extends GetWidget<ValidasiController> {
-  var controller = Get.put(ValidasiController());
+class LoginPage extends StatelessWidget {
+  final controller = Get.put(ValidasiControllers());
+  final loginController = Get.put(LoginController());
+  GlobalKey<FormState> formlogin = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    var isHidden = true;
     return Scaffold(
       backgroundColor: ColorHelpers.backgroundColorValidasi,
       body: ListView(
@@ -25,41 +28,60 @@ class LoginPage extends GetWidget<ValidasiController> {
           SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TextField(
-              autocorrect: true,
-              decoration: InputDecoration(
-                  label: Text("Masukan Username"),
-                  filled: true,
-                  fillColor: ColorHelpers.fieldColor,
-                  border: OutlineInputBorder()),
-            ),
-          ),
-         const  SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Obx(
-              () => TextField(
-                obscureText: controller.isObsecure.value,
-                autocorrect: false,
-                decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          print(controller.isObsecure.value);
-                          controller.isObsecure.value =
-                              !controller.isObsecure.value;
-                        },
-                        icon: controller.isObsecure.value
-                            ? Icon(Icons.visibility_off)
-                            : Icon(Icons.visibility)),
-                    label: Text("Masukan Password"),
-                    filled: true,
-                    fillColor: ColorHelpers.fieldColor,
-                    border: OutlineInputBorder()),
-              ),
+          Form(
+            key: formlogin,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFormField(
+                    controller: loginController.usC,
+                    validator: (value) {
+                      if (value.toString().isEmpty) {
+                        return "Username tidak boleh kosong";
+                      }
+                    },
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                        label: Text("Masukan Username"),
+                        filled: true,
+                        fillColor: ColorHelpers.fieldColor,
+                        border: OutlineInputBorder()),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Obx(
+                    () => TextFormField(
+                      validator: (value) {
+                        if (value.toString().isEmpty) {
+                          return "Password tidak boleh kosong";
+                        }
+                      },
+                      controller: loginController.passC,
+                      obscureText: controller.isObsecure.value,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                print(controller.isObsecure.value);
+                                controller.isObsecure.value =
+                                    !controller.isObsecure.value;
+                              },
+                              icon: controller.isObsecure.value
+                                  ? Icon(Icons.visibility_off)
+                                  : Icon(Icons.visibility)),
+                          label: Text("Masukan Password"),
+                          filled: true,
+                          fillColor: ColorHelpers.fieldColor,
+                          border: OutlineInputBorder()),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(
@@ -68,7 +90,7 @@ class LoginPage extends GetWidget<ValidasiController> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: InkWell(
-              onTap: () => Navigator.pushNamed(context, "/forgot-password"),
+              onTap: () => Get.toNamed("/forgot-password"),
               child: Text(
                 "Lupa Password ?",
                 textAlign: TextAlign.end,
@@ -86,8 +108,12 @@ class LoginPage extends GetWidget<ValidasiController> {
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: ColorHelpers.backgroundBlueNew),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/dashboard");
+                  onPressed: () async {
+                    if (formlogin.currentState!.validate()) {
+                      loginController.login();
+                    }
+
+                    // Get.offNamed("/home");
                   },
                   child: const Text(
                     "Login",
@@ -101,18 +127,21 @@ class LoginPage extends GetWidget<ValidasiController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: InkWell(
-              onTap: () => Navigator.pushNamed(context, "/register"),
+              onTap: () => Get.toNamed("/register"),
               child: RichText(
-                  text: TextSpan(children: [
-                const TextSpan(
-                  text: "Baru Di Go Intern?",
-                  style: TextStyle(color: Colors.black),
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: "Baru Di Go Intern?",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    TextSpan(
+                      text: "Click Me",
+                      style: TextStyle(color: ColorHelpers.backgroundBlueNew),
+                    )
+                  ],
                 ),
-                TextSpan(
-                  text: "Click Me",
-                  style: TextStyle(color: ColorHelpers.backgroundBlueNew),
-                )
-              ])),
+              ),
             ),
           )
         ],
@@ -121,6 +150,6 @@ class LoginPage extends GetWidget<ValidasiController> {
   }
 }
 
-class ValidasiController extends GetxController {
+class ValidasiControllers extends GetxController {
   var isObsecure = true.obs;
 }

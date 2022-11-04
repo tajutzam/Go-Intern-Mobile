@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard.dart';
@@ -8,17 +6,18 @@ import 'package:go_intern/view/page/magang.dart';
 import 'package:go_intern/view/page/profile/profile.dart';
 import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
 
+// ignore: must_be_immutable
+// ignore: must_be_immutable
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
-
   List apbar = [
     PreferredSize(
+        preferredSize: Size.fromHeight(100),
         child: AppBar(
           title: Text("Baru Baru ini Apply"),
           automaticallyImplyLeading: false,
           backgroundColor: ColorHelpers.backgroundBlueNew,
-        ),
-        preferredSize: Size.fromHeight(100)),
+        )),
     PreferredSize(
         child: AppBar(
           title: Text("Profile"),

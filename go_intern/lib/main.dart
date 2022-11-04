@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/view/page/dashboard.dart';
 import 'package:go_intern/view/page/detail_magang.dart';
 import 'package:go_intern/view/page/homepage.dart';
 import 'package:go_intern/view/page/introduction_screnn.dart';
@@ -24,18 +25,20 @@ class GoInternApp extends StatelessWidget {
       theme: ThemeData(fontFamily: "unchen"),
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
-      routes: {
-        "/forgot-password": (p0) => const LupaPassword(),
-        "/register": (p0) => const RegisterScrenn(),
-        "/splash": (p0) => const SplashScreen(),
-        "/login": (p0) => LoginPage(),
-        "/dashboard": (p0) => HomePageScrenn(),
-        "/detailmagang": (p0) => DetailMagang(),
-        "/tentang-saya": (p0) => TentangSaya(),
-        "/pendidikan": (p0) => Pendidikan(),
-        "/skill": (p0) => Skill(),
-        "/penghargaan": (p0) => Penghargaan()
-      },
+      getPages: [
+        GetPage(name: "/register", page: () => RegisterScrenn()),
+        GetPage(name: "/dashboard", page: () => DashboardScrenn()),
+        GetPage(
+            name: "/home",
+            page: () => HomePageScrenn(),
+            transition: Transition.zoom),
+        GetPage(name: "/login", page: () => LoginPage()),
+        GetPage(name: "/tentang-saya", page: () => TentangSaya()),
+        GetPage(name: "/skill", page: () => Skill()),
+        GetPage(name: "/penghargaan", page: () => Penghargaan()),
+        GetPage(name: "/forgot-password", page: () => LupaPassword(),),
+        GetPage(name: "/pendidikan", page: () => Pendidikan(),)
+      ],
       home: FutureBuilder(
         future: Future.delayed(const Duration(seconds: 3)),
         builder: (context, snapshot) {

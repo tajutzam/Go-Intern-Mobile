@@ -1,15 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/register_controller.dart';
 import 'package:go_intern/helpers/color.dart';
 
-class RegisterScrenn extends StatefulWidget {
-  const RegisterScrenn({super.key});
-  @override
-  State<RegisterScrenn> createState() => _RegisterScrennState();
-}
+class RegisterScrenn extends StatelessWidget {
+  final registerC = Get.put(RegisterController());
 
-class _RegisterScrennState extends State<RegisterScrenn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,34 +64,50 @@ class _RegisterScrennState extends State<RegisterScrenn> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TextField(
-              textInputAction: TextInputAction.next,
-              autocorrect: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: ColorHelpers.fieldColor,
-                labelText: "Masukan Password",
-                labelStyle:
-                    TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+            child: Obx(
+              () => TextFormField(
+                obscureText: registerC.isHiden1.value,
+                textInputAction: TextInputAction.next,
+                autocorrect: true,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                      onPressed: registerC.toogle1,
+                      icon: registerC.isHiden1.value
+                          ? Icon(Icons.visibility_off)
+                          : Icon(Icons.visibility)),
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: ColorHelpers.fieldColor,
+                  labelText: "Masukan Password",
+                  labelStyle:
+                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                ),
               ),
             ),
           ),
           SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TextField(
-              textInputAction: TextInputAction.next,
-              autocorrect: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: ColorHelpers.fieldColor,
-                labelText: "Konfirmasi Password",
-                labelStyle:
-                    TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+          Obx(
+            () => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: TextFormField(
+                obscureText: registerC.isHiden2.value,
+                textInputAction: TextInputAction.next,
+                autocorrect: true,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                      onPressed: registerC.toogle2,
+                      icon: registerC.isHiden2.value
+                          ? Icon(Icons.visibility_off)
+                          : Icon(Icons.visibility)),
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: ColorHelpers.fieldColor,
+                  labelText: "Konfirmasi Password",
+                  labelStyle:
+                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                ),
               ),
             ),
           ),
@@ -119,9 +132,7 @@ class _RegisterScrennState extends State<RegisterScrenn> {
                 customItemsHeights: _getCustomItemsHeights(),
                 value: selectedValue,
                 onChanged: (value) {
-                  setState(() {
-                    selectedValue = value as String;
-                  });
+                  selectedValue = value as String;
                 },
                 buttonHeight: 40,
                 dropdownMaxHeight: 200,
@@ -139,7 +150,7 @@ class _RegisterScrennState extends State<RegisterScrenn> {
                     backgroundColor: ColorHelpers.backgroundBlueNew),
                 onPressed: () {
                   // todolist register service
-                  Navigator.pushReplacementNamed(context, "/login");
+                  Get.offNamed("/login");
                 },
                 child: Text(
                   "Submit",
@@ -204,5 +215,3 @@ List<double> _getCustomItemsHeights() {
   }
   return _itemsHeights;
 }
-
-class ControllerRegister extends GetxController {}

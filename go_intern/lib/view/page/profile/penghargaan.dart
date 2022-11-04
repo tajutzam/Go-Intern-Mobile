@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 
 class Penghargaan extends StatelessWidget {
@@ -7,12 +8,12 @@ class Penghargaan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: ColorHelpers.colorNavbarProfile,
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           icon: Icon(
             Icons.arrow_back,

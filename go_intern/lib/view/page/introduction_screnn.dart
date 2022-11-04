@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 
@@ -51,7 +52,7 @@ dalam urusan pencarian tempat magang''',
         ),
       ],
       onDone: () {
-        Navigator.pushReplacementNamed(context, "/login");
+        Get.offNamed("/login");
       },
     );
   }

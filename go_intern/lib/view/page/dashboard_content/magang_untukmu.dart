@@ -7,13 +7,22 @@ class MagangUntukmu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      separatorBuilder: (context, index) => Divider(),
+      separatorBuilder: (context, index) => Divider(
+        color: ColorHelpers.backgroundOfIntroduction,
+      ),
       itemCount: 10,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
           height: 100,
           decoration: BoxDecoration(
+              boxShadow: [
+                  BoxShadow(
+                                blurRadius: 0.5,
+                                offset: Offset(5, 5),
+                                color: Colors.grey.withOpacity(0.5),
+                              ),
+              ],
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(6))),
           child: ListTile(
@@ -25,7 +34,7 @@ class MagangUntukmu extends StatelessWidget {
               width: 140,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: ColorHelpers.backgroundBlueNew),
+                      backgroundColor: ColorHelpers.backgroundBlueNew),
                   onPressed: () {
                     Navigator.pushNamed(context, "/detailmagang");
                   },

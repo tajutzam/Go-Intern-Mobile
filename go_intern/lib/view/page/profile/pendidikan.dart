@@ -1,5 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:intl/intl.dart';
 
@@ -27,7 +28,7 @@ class _PendidikanState extends State<Pendidikan> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           icon: Icon(
             Icons.arrow_back,
@@ -75,7 +76,7 @@ class _PendidikanState extends State<Pendidikan> {
                         ),
                         items: [
                           "SMK",
-                          "SMA", 
+                          "SMA",
                           "SMP",
                           'DIPLOMA III',
                           'DIPLOMA IV',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 
 class LupaPassword extends StatelessWidget {
@@ -63,7 +64,7 @@ sudah terdaftar''',
                     backgroundColor: ColorHelpers.backgroundBlueNew),
                 onPressed: () {
                   // todolist Cek Email valid or no
-                  Navigator.pushReplacementNamed(context, "/login");
+                  Get.offNamed("/login");
                 },
                 child: Text(
                   "Kirim",
