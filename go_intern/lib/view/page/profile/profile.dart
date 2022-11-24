@@ -1,11 +1,24 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
+import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
+import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
+import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/profile/update_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
   List data = ["Tentang Saya", "Pendidikan", "Skill", "Penghargaan"];
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  var usC = Get.find<UserController>();
+  var logC = Get.find<LoginController>();
+  var dashC = Get.put(DashboardController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,16 +40,85 @@ class ProfilePage extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 30, left: 15),
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: ColorHelpers.fieldColor,
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: NetworkImage("https://picsum.photos/200"),
+                      child: Stack(
+                        children: [
+                          Obx(
+                            () => CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              fit: BoxFit.cover,
+                              imageUrl: UrlHelper.baseUrlImagePencariMagang +
+                                  dashC.foto.toString(),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                height: 70,
+                                width: 70,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(70),
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: InkWell(
+                              onTap: () async {
+                                SharedPreferences sharedPreferences =
+                                    await SharedPreferences.getInstance();
+                                FilePickerResult? result =
+                                    await FilePicker.platform.pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: [
+                                          'jpg',
+                                          'png',
+                                          'jpeg'
+                                        ],
+                                        allowMultiple: false,
+                                        dialogTitle: 'Select image',
+                                        allowCompression: true);
+                                if (result != null) {
+                                  print('not null');
+                                  usC.uploadImage(result.files.single.path, '');
+                                  var username =
+                                      sharedPreferences.getString('username');
+                                  dashC.getDataUser(username);
+                                  print(dashC.interactChange);
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 3,
+                                      color: Colors.white,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        50,
+                                      ),
+                                    ),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(2, 4),
+                                        color: Colors.black.withOpacity(
+                                          0.3,
+                                        ),
+                                        blurRadius: 3,
+                                      ),
+                                    ]),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Icon(
+                                    Icons.edit,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     // Padding(
@@ -56,7 +138,7 @@ class ProfilePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 20),
                   child: Text(
-                    "Ucup Sarucup",
+                    usC.sharedPreferences!.getString('nama').toString(),
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -69,7 +151,7 @@ class ProfilePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
-                    children: [
+                    children: const [
                       Icon(
                         Icons.location_on_sharp,
                         color: Colors.white,
@@ -103,7 +185,10 @@ class ProfilePage extends StatelessWidget {
               height: 100,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [ColorHelpers.colorNavbarProfile, Colors.white]),
                 boxShadow: [
                   BoxShadow(
                       blurRadius: 0.5,
@@ -120,7 +205,7 @@ class ProfilePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
                     child: Text(
-                      "Ayo Lengkapi datamu",
+                      "Datamu Kurang lengkap nihh",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -128,16 +213,27 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(
                     height: 7,
                   ),
-                  Container(
-                      child: IconButton(
-                          onPressed: () {
-                            Get.to(() => UpdateScrenn());
-                          },
-                          icon: Icon(
-                            Icons.note_alt,
-                            size: 40,
-                            color: ColorHelpers.colorBlackText,
-                          )))
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Get.to(UpdateScrenn.new);
+                        },
+                        icon: Icon(
+                          Icons.note_alt,
+                          size: 40,
+                          color: ColorHelpers.colorBlackText,
+                        ),
+                      ),
+                      Text(
+                        'lengkapi sekarang',
+                        style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
@@ -177,9 +273,11 @@ class ProfilePage extends StatelessWidget {
                             height: 35,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: ColorHelpers.backgroundBlueNew),
+                                  backgroundColor:
+                                      ColorHelpers.backgroundBlueNew),
                               onPressed: () {
                                 if (index == 0) {
+                                  usC.setValueTentangSaya();
                                   Get.toNamed("/tentang-saya");
                                 } else if (index == 1) {
                                   Get.toNamed("/pendidikan");
@@ -192,11 +290,16 @@ class ProfilePage extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Tambahkan ${data[index]}",
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  Icon(Icons.add)
+                                  logC.dataList[index] == ""
+                                      ? Text(
+                                          "Tambahkan ${data[index]}",
+                                          textAlign: TextAlign.start,
+                                        )
+                                      : Text("Update ${data[index]}",
+                                          textAlign: TextAlign.start),
+                                  Icon(logC.dataList[index] == ""
+                                      ? Icons.add
+                                      : Icons.edit)
                                 ],
                               ),
                             ),

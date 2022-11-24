@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard.dart';
 import 'package:go_intern/view/page/magang.dart';
@@ -10,6 +11,7 @@ import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
 // ignore: must_be_immutable
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
+  var dashC = Get.put(DashboardController());
   List apbar = [
     PreferredSize(
         preferredSize: Size.fromHeight(100),
@@ -19,37 +21,38 @@ class HomePageScrenn extends StatelessWidget {
           backgroundColor: ColorHelpers.backgroundBlueNew,
         )),
     PreferredSize(
+        preferredSize: Size.fromHeight(400),
         child: AppBar(
           title: Text("Profile"),
           automaticallyImplyLeading: false,
           backgroundColor: ColorHelpers.backgroundBlueNew,
-        ),
-        preferredSize: Size.fromHeight(400)),
+        )),
   ];
 
   buildBottomNavigationMenu(context, ControllerBottom landingPageControlller) {
-    return Obx(() => MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: BottomNavigationBar(
-            // ignore: prefer_const_literals_to_create_immutables
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.home), label: "Dashboard"),
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.work), label: "Magang"),
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.work_history), label: "Baru-baru Ini Apply"),
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: "Profile")
-            ],
-            currentIndex: controller.tabIndex.value,
-            onTap: controller.changeTabIndex,
-            selectedItemColor: ColorHelpers.backgroundBlueNew,
-            unselectedItemColor: ColorHelpers.colorBot,
-            unselectedLabelStyle: TextStyle(color: ColorHelpers.colorBot),
-            showUnselectedLabels: true,
-          ),
-        ));
+    return Obx(
+      () => MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: BottomNavigationBar(
+          // ignore: prefer_const_literals_to_create_immutables
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Dashboard"),
+            const BottomNavigationBarItem(
+                icon: Icon(Icons.work), label: "Magang"),
+            const BottomNavigationBarItem(
+                icon: Icon(Icons.work_history), label: "Baru-baru Ini Apply"),
+            const BottomNavigationBarItem(
+                icon: Icon(Icons.person), label: "Profile")
+          ],
+          currentIndex: controller.tabIndex.value,
+          onTap: controller.changeTabIndex,
+          selectedItemColor: ColorHelpers.backgroundBlueNew,
+          unselectedItemColor: ColorHelpers.colorBot,
+          unselectedLabelStyle: TextStyle(color: ColorHelpers.colorBot),
+          showUnselectedLabels: true,
+        ),
+      ),
+    );
   }
 
   @override
@@ -62,12 +65,12 @@ class HomePageScrenn extends StatelessWidget {
       //       )),
       //   preferredSize: Size.fromHeight(60),
       // ),
-      body: Center(
-        child: Obx(
-          () => IndexedStack(
+      body: Obx(
+        () => Center(
+          child: IndexedStack(
+            sizing: StackFit.loose,
             index: controller.tabIndex.value,
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
+            children: <Widget>[
               DashboardScrenn(),
               Magang(),
               RecentApplyPage(),

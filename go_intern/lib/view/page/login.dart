@@ -110,7 +110,8 @@ class LoginPage extends StatelessWidget {
                       primary: ColorHelpers.backgroundBlueNew),
                   onPressed: () async {
                     if (formlogin.currentState!.validate()) {
-                      loginController.login();
+                      var response = await loginController.login();
+                      print(response);
                     }
 
                     // Get.offNamed("/home");

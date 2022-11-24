@@ -1,22 +1,37 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
+import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
+import 'package:go_intern/helpers/url.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class DashboardScrenn extends StatelessWidget {
-  const DashboardScrenn({super.key});
+  var data = Get.arguments;
+  var dashC = Get.put(DashboardController());
+  var loginC = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
+    // String username = data[0]['username'];
+    dashC.onReady;
     return Scaffold(
       backgroundColor: ColorHelpers.backgroundOfIntroduction,
-      
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(200),
         child: Container(
-
             height: 200,
             decoration: BoxDecoration(
-              color: ColorHelpers.colorNavbarProfile,
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    ColorHelpers.backgroundBlueNew,
+                    ColorHelpers.colorNavbarProfile1
+                  ]),
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(20),
                   bottomLeft: Radius.circular(20)),
@@ -31,40 +46,38 @@ class DashboardScrenn extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 30, left: 15),
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: ColorHelpers.fieldColor,
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage("https://picsum.photos/200"),
+                        child: Obx(
+                          () => CachedNetworkImage(
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            fit: BoxFit.cover,
+                            // ignore: unnecessary_null_comparison
+                            imageUrl: UrlHelper.baseUrlImagePencariMagang +
+                                dashC.foto.toString(),
+                            imageBuilder: (context, imageProvider) => Container(
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(70),
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(right: 20, top: 15),
-                      //   child: IconButton(
-                      //       onPressed: () {
-
-                      //       },
-                      //       icon: Icon(
-                      //         Icons.,
-                      //         color: Colors.white,
-                      //         size: 30,
-                      //       )),
-                      // )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 20),
-                    child: Text(
-                      "Hai , Ucup sarucup ayo temukan tempat magang terbaik mu",
-                      style: TextStyle(
-                          color: ColorHelpers.colorBlackText,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 20),
+                      child: Text(
+                        "Hai ,${dashC.username.value}  ayo temukan tempat magang terbaik mu",
+                        style: TextStyle(
+                            color: ColorHelpers.colorBlackText,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -72,11 +85,7 @@ class DashboardScrenn extends StatelessWidget {
                   ),
                 ],
               ),
-            )
-            // child: Expanded(
-            //   child: ListTile(),
-            // ),
-            ),
+            )),
       ),
       body: ListView(
         //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,12 +110,17 @@ class DashboardScrenn extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             child: SizedBox(
               height: 150,
-              child: ListView.separated(
-                  padding: EdgeInsets.only(bottom: 10),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return index % 2 == 0
-                        ? Container(
+              child: CarouselSlider.builder(
+                // padding: EdgeInsets.only(bottom: 10),
+                // scrollDirection: Axis.horizontal,
+                // controller: dashC.scrollController,
+                // reverse: true,
+                itemBuilder: (context, index, int pageview) {
+                  return index % 2 == 0
+                      ? Card(
+                          elevation: 0,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          child: Container(
                             width: 230,
                             height: 120,
                             decoration: BoxDecoration(
@@ -116,7 +130,7 @@ class DashboardScrenn extends StatelessWidget {
                               boxShadow: [
                                 BoxShadow(
                                     blurRadius: 0.5,
-                                    offset: Offset(6, 6),
+                                    offset: Offset(9, 9),
                                     color: Color(0xff1E1E1E).withOpacity(.2),
                                     spreadRadius: -4),
                               ],
@@ -124,51 +138,85 @@ class DashboardScrenn extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, left: 10),
+                                  padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
                                     "Politeknik Negeri Jember",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: ListTile(
-                                      leading: Image.network(
-                                          "https://picsum.photos/id/${237 + index}/300/300")),
+                                SizedBox(
+                                  height: 10,
                                 ),
-                               Container(
-                                  margin: const EdgeInsets.only(left: 120),
-                                  child: SizedBox(
-                                    height: 30,
-                                    width: 100,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                ColorHelpers.backgroundBlueNew),
-                                        onPressed: () {},
-                                        child: Text("Detail" , style: TextStyle(
-                                          fontSize: 15
-                                        ),)),
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CachedNetworkImage(
+                                      height: 70,
+                                      imageUrl: "https://picsum.photos/200",
+                                      progressIndicatorBuilder: (context, url,
+                                              downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 60),
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 80,
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            SharedPreferences
+                                                sharedPreferences =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            print(sharedPreferences
+                                                .getString('username'));
+                                            print(sharedPreferences
+                                                .getString('agama'));
+                                            print(sharedPreferences
+                                                .getString('tentang-saya'));
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: ColorHelpers
+                                                  .backgroundBlueNew),
+                                          child: Text("Detail"),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
-                          )
-                        : Container(
+                          ),
+                        )
+                      : Card(
+                          elevation: 0,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          child: Container(
                             width: 230,
                             height: 120,
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),
-                              color: ColorHelpers.yelloColor,
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomRight,
+                                  colors: const [
+                                    ColorHelpers.colorNavbarProfile,
+                                    ColorHelpers.colorNavbarProfile1
+                                  ]),
                               boxShadow: [
-                                   BoxShadow(
+                                BoxShadow(
                                     blurRadius: 0.5,
-                                    offset: Offset(6, 6),
+                                    offset: Offset(9, 9),
                                     color: Color(0xff1E1E1E).withOpacity(.2),
                                     spreadRadius: -4),
                               ],
@@ -176,45 +224,65 @@ class DashboardScrenn extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, left: 10),
+                                  padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
                                     "Politeknik Negeri Jember",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: ListTile(
-                                      leading: Image.network(
-                                          "https://picsum.photos/id/${237 + index}/300/300")),
+                                SizedBox(
+                                  height: 10,
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 120),
-                                  child: SizedBox(
-                                    height: 30,
-                                    width: 100,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                ColorHelpers.backgroundBlueNew),
-                                        onPressed: () {},
-                                        child: Text("Detail" , style: TextStyle(
-                                          fontSize: 15
-                                        ),)),
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CachedNetworkImage(
+                                      height: 70,
+                                      imageUrl: "https://picsum.photos/200",
+                                      progressIndicatorBuilder: (context, url,
+                                              downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 60),
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 80,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: ColorHelpers
+                                                  .backgroundBlueNew),
+                                          child: Text("Detail"),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
-                          );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(
-                        width: 30,
-                      ),
-                  itemCount: 100),
+                          ),
+                        );
+                },
+
+                itemCount: 100,
+                options: CarouselOptions(
+                  autoPlay: true,
+                  viewportFraction: 0.6,
+                  aspectRatio: 2.0,
+                  initialPage: 0,
+                  enlargeCenterPage: true,
+                ),
+              ),
             ),
           ),
           Divider(
@@ -235,38 +303,18 @@ class DashboardScrenn extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15),
-            child: Container(
+            child: SizedBox(
               height: 150,
               child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return Column(
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: ColorHelpers.backgroundColorValidasi),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100)),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 10.0,
-                                offset: Offset(5, 10),
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: SizedBox(
-                              height: 70,
-                              width: 70,
-                              child: Image(
-                                image: AssetImage("assets/images/komputer.png"),
-                              ),
-                            ),
+                      children: const [
+                        SizedBox(
+                          height: 70,
+                          width: 70,
+                          child: Image(
+                            image: AssetImage("assets/images/komputer.png"),
                           ),
                         ),
                         SizedBox(
@@ -289,10 +337,10 @@ class DashboardScrenn extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
-              "10 List Magang Terbaru",
+              "Magang yang sesuai dengan mu",
               style: TextStyle(
                   fontSize: 20,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   color: ColorHelpers.colorBlackText),
             ),
           ),
@@ -309,100 +357,93 @@ class DashboardScrenn extends StatelessWidget {
               ),
               itemCount: 10, // ambil api
               itemBuilder: (context, index) {
-                return Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                         BoxShadow(
-                                    blurRadius: 0.5,
-                                    offset: Offset(7, 7),
-                                    color: Color(0xff1E1E1E).withOpacity(.2),
-                                    spreadRadius: -4),
-                    ],
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                return Card(
+                  elevation: 0,
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  child: Container(
+                    width: 230,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      color: ColorHelpers.backgroundColorValidasi,
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: const [
+                            ColorHelpers.colorNavbarProfile,
+                            Colors.white
+                          ]),
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 0.5,
+                            offset: Offset(6, 6),
+                            color: Color(0xff1E1E1E).withOpacity(.2),
+                            spreadRadius: -4),
+                      ],
+                    ),
+                    child: Row(
                       children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Software Engginer",
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w600,
-                              color: ColorHelpers.colorBlackText,
-                              fontFamily: 'ubuntu'),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            "Teknik Informatika",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: ColorHelpers.colorBlackText),
+                          padding: const EdgeInsets.all(8.0),
+                          child: CachedNetworkImage(
+                            imageUrl: "https://picsum.photos/200",
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(
-                                "Rp.500.000",
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Frontend Engginer',
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w400),
+                                    fontFamily: 'poppins',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600),
                               ),
-                            ),
-                            FlutterLogo(
-                              size: 40,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: const  [
-                                Icon(Icons.location_on),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  "Indonesia,jember",
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 100,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          ColorHelpers.backgroundBlueNew),
-                                  onPressed: () {},
+                              Expanded(
                                   child: Text(
-                                    "detail ",
-                                    style: TextStyle(
-                                      fontSize: 20,
+                                'membutuhkan , intern untuk menangani pada bagian front end menggunakan react',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'poppins',
+                                    fontWeight: FontWeight.w500),
+                              )),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        'Politeknik Negeri Jember',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  )),
-                            )
-                          ],
+                                    IconButton(
+                                        onPressed: () {
+                                          print('clicked');
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward,
+                                          size: 35,
+                                          color: ColorHelpers.colorBlackText,
+                                        ))
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),

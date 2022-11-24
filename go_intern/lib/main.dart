@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
+import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
+import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/view/page/dashboard.dart';
-import 'package:go_intern/view/page/detail_magang.dart';
 import 'package:go_intern/view/page/homepage.dart';
 import 'package:go_intern/view/page/introduction_screnn.dart';
 import 'package:go_intern/view/page/login.dart';
 import 'package:go_intern/view/page/lupapassword.dart';
 import 'package:go_intern/view/page/profile/pendidikan.dart';
 import 'package:go_intern/view/page/profile/penghargaan.dart';
+import 'package:go_intern/view/page/profile/profile.dart';
 import 'package:go_intern/view/page/profile/skill.dart';
 import 'package:go_intern/view/page/profile/tentang_saya.dart';
 import 'package:go_intern/view/page/register.dart';
 import 'package:go_intern/view/splash/splash.dart';
 
-void main(List<String> args) {
-  runApp(const GoInternApp());
+void main(List<String> args) async {
+  await GetStorage.init();
+  runApp(GoInternApp());
 }
 
+// ignore: must_be_immutable
 class GoInternApp extends StatelessWidget {
-  const GoInternApp({super.key});
+  GoInternApp({super.key});
+  var userC = Get.put(UserController());
+  var logC = Get.put(LoginController());
+  var dashC = Get.put(DashboardController());
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -26,18 +35,28 @@ class GoInternApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       getPages: [
-        GetPage(name: "/register", page: () => RegisterScrenn()),
-        GetPage(name: "/dashboard", page: () => DashboardScrenn()),
+        GetPage(name: "/register", page: RegisterScrenn.new),
+        GetPage(name: "/dashboard", page: DashboardScrenn.new),
         GetPage(
             name: "/home",
-            page: () => HomePageScrenn(),
-            transition: Transition.zoom),
-        GetPage(name: "/login", page: () => LoginPage()),
-        GetPage(name: "/tentang-saya", page: () => TentangSaya()),
-        GetPage(name: "/skill", page: () => Skill()),
-        GetPage(name: "/penghargaan", page: () => Penghargaan()),
-        GetPage(name: "/forgot-password", page: () => LupaPassword(),),
-        GetPage(name: "/pendidikan", page: () => Pendidikan(),)
+            page: HomePageScrenn.new,
+            transition: Transition.fadeIn),
+        GetPage(
+            name: "/login",
+            page: LoginPage.new,
+            transition: Transition.leftToRight),
+        GetPage(name: "/tentang-saya", page: TentangSaya.new),
+        GetPage(name: "/skill", page: Skill.new),
+        GetPage(name: "/penghargaan", page: Penghargaan.new),
+        GetPage(
+          name: "/forgot-password",
+          page: LupaPassword.new,
+        ),
+        GetPage(
+          name: "/pendidikan",
+          page: Pendidikan.new,
+        ),
+        GetPage(name: "/profile", page: ProfilePage.new)
       ],
       home: FutureBuilder(
         future: Future.delayed(const Duration(seconds: 3)),
