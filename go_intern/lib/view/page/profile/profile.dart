@@ -11,7 +11,6 @@ import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/profile/update_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 // ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
   List data = ["Tentang Saya", "Pendidikan", "Skill", "Penghargaan"];
@@ -48,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                                   CircularProgressIndicator(),
                               fit: BoxFit.cover,
                               imageUrl: UrlHelper.baseUrlImagePencariMagang +
-                                  dashC.foto.toString(),
+                                  dashC.foto.value.toString(),
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 height: 70,
@@ -80,11 +79,10 @@ class ProfilePage extends StatelessWidget {
                                         dialogTitle: 'Select image',
                                         allowCompression: true);
                                 if (result != null) {
-                                  print('not null');
-                                  usC.uploadImage(result.files.single.path, '');
+                                  print('not null ${result.files.single.path}');     
                                   var username =
                                       sharedPreferences.getString('username');
-                                  dashC.getDataUser(username);
+                                  dashC.getDataUser(username , result.files.single.path , '');
                                   print(dashC.interactChange);
                                 }
                               },

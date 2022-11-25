@@ -17,7 +17,6 @@ class DashboardScrenn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // String username = data[0]['username'];
-    dashC.onReady;
     return Scaffold(
       backgroundColor: ColorHelpers.backgroundOfIntroduction,
       appBar: PreferredSize(
@@ -52,8 +51,9 @@ class DashboardScrenn extends StatelessWidget {
                                 CircularProgressIndicator(),
                             fit: BoxFit.cover,
                             // ignore: unnecessary_null_comparison
+                            errorWidget: (context, url, error) => Image.asset("assets/images/woman.png"),
                             imageUrl: UrlHelper.baseUrlImagePencariMagang +
-                                dashC.foto.toString(),
+                                dashC.foto.value.toString(),
                             imageBuilder: (context, imageProvider) => Container(
                               height: 70,
                               width: 70,

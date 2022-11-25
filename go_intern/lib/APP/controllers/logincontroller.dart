@@ -51,7 +51,6 @@ class LoginController extends GetxController {
           colorText: Color.fromRGBO(39, 39, 39, 1),
           backgroundColor: Colors.green[100]);
       LoginResponse dataPencariMagang = LoginResponse.fromJson(data);
-      // print(respons.body);
       var tentangSaya = dataPencariMagang.body[0][0].tentangSaya;
       dataList[0] = tentangSaya;
       var response =
@@ -61,21 +60,10 @@ class LoginController extends GetxController {
       if (skils['status'] == 'ok') {
         dataList[2] = skils['skills'];
       }
-      Get.offNamed(
-        "/home",
-        arguments: [
-          {
-            "agama": dataPencariMagang.body[0][0].agama,
-            "username": dataPencariMagang.body[0][0].username,
-            "password": dataPencariMagang.body[0][0].password,
-            "no-telp": dataPencariMagang.body[0][0].noTelp,
-            "tanggal-lahir": dataPencariMagang.body[0][0].tanggalLahir,
-            "id-sekolah": dataPencariMagang.body[0][0].idSekolah,
-          }
-        ],
-      );
+      var dashC = Get.put(DashboardController());
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
+      sharedPreferences.clear();
       sharedPreferences.setString(
           'username', dataPencariMagang.body[0][0].username);
       sharedPreferences.setString('agama', dataPencariMagang.body[0][0].agama);
@@ -88,6 +76,21 @@ class LoginController extends GetxController {
       sharedPreferences.setString('foto', dataPencariMagang.body[0][0].foto);
       sharedPreferences.setString(
           'jenis_kelamin', dataPencariMagang.body[0][0].jenisKelamin);
+      Future.delayed(
+          Duration(seconds: 2),
+          () => Get.offNamed(
+                "/home",
+                arguments: [
+                  {
+                    "agama": dataPencariMagang.body[0][0].agama,
+                    "username": dataPencariMagang.body[0][0].username,
+                    "password": dataPencariMagang.body[0][0].password,
+                    "no-telp": dataPencariMagang.body[0][0].noTelp,
+                    "tanggal-lahir": dataPencariMagang.body[0][0].tanggalLahir,
+                    "id-sekolah": dataPencariMagang.body[0][0].idSekolah,
+                  }
+                ],
+              ));
     }
   }
 

@@ -11,7 +11,7 @@ import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
 // ignore: must_be_immutable
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
-  var dashC = Get.put(DashboardController());
+  
   List apbar = [
     PreferredSize(
         preferredSize: Size.fromHeight(100),

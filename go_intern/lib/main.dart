@@ -27,7 +27,6 @@ class GoInternApp extends StatelessWidget {
   GoInternApp({super.key});
   var userC = Get.put(UserController());
   var logC = Get.put(LoginController());
-  var dashC = Get.put(DashboardController());
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -74,7 +73,6 @@ class GoInternApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

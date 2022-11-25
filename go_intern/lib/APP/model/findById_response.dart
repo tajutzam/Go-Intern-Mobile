@@ -1,34 +1,30 @@
 // To parse this JSON data, do
 //
-//     final costumer = costumerFromJson(jsonString);
+//     final UserFindByIdResponse = costumerFromJson(jsonString);
 
 import 'dart:convert';
 
-UserResponse userResponseFromJson(String str) => UserResponse.fromJson(json.decode(str));
+UserFindByIdResponse costumerFromJson(String str) => UserFindByIdResponse.fromJson(json.decode(str));
 
-String userResponseToJson(UserResponse data) => json.encode(data.toJson());
+String costumerToJson(UserFindByIdResponse data) => json.encode(data.toJson());
 
-class UserResponse {
-    UserResponse({
-       required this.status,
+class UserFindByIdResponse {
+    UserFindByIdResponse({
        required this.body,
-       required this.length,
+       required this.status,
     });
 
-    String status;
     List<Body> body;
-    int length;
+    String status;
 
-    factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
-        status: json["status"],
+    factory UserFindByIdResponse.fromJson(Map<String, dynamic> json) => UserFindByIdResponse(
         body: List<Body>.from(json["body"].map((x) => Body.fromJson(x))),
-        length: json["length"],
+        status: json["status"],
     );
 
     Map<String, dynamic> toJson() => {
-        "status": status,
         "body": List<dynamic>.from(body.map((x) => x.toJson())),
-        "length": length,
+        "status": status,
     };
 }
 
@@ -38,66 +34,63 @@ class Body {
        required this.username,
        required this.password,
        required this.email,
-       required this.idSekolah,
+       required this.sekolah,
        required this.noTelp,
        required this.agama,
-       required this.tanggalLahir,
+       required this.tangalLahir,
        required this.token,
        required this.cv,
        required this.resume,
        required this.status,
        required this.statusMagang,
        required this.role,
-       required this.crateAdd,
-       required this.updateAdd,
-       required this.expiredToken,
-       required this.tentangSaya,
+       required this.createAt,
+       required this.updateAt,
        required this.nama,
        required this.foto,
+       required this.jenisKelamin,
     });
 
     int id;
     String username;
     String password;
     String email;
-    int idSekolah;
-    dynamic noTelp;
-    dynamic agama;
-    String tanggalLahir;
+    int sekolah;
+    int noTelp;
+    String agama;
+    DateTime tangalLahir;
     String token;
-    dynamic cv;
-    dynamic resume;
+    String cv;
+    String resume;
     String status;
     String statusMagang;
     int role;
-    String crateAdd;
-    String updateAdd;
-    String expiredToken;
-    String tentangSaya;
+    DateTime createAt;
+    String updateAt;
     String nama;
     String foto;
+    String jenisKelamin;
 
     factory Body.fromJson(Map<String, dynamic> json) => Body(
         id: json["id"],
         username: json["username"],
         password: json["password"],
         email: json["email"],
-        idSekolah: json["id_sekolah"] ?? 0,
+        sekolah: json["sekolah"],
         noTelp: json["no_telp"],
         agama: json["agama"],
-        tanggalLahir: json["tanggal_lahir"],
+        tangalLahir: DateTime.parse(json["tangal_lahir"]),
         token: json["token"],
         cv: json["cv"],
         resume: json["resume"],
         status: json["status"],
-        statusMagang: json["status_magang"],
+        statusMagang: json["statusMagang"],
         role: json["role"],
-        crateAdd: json["crate_add"],
-        updateAdd: json["update_add"],
-        expiredToken: json["expired_token"],
-        tentangSaya: json["tentang-saya"] ?? 'null',
+        createAt: DateTime.parse(json["create_at"]),
+        updateAt: json["update_at"],
         nama: json["nama"],
-        foto: json["foto"] ?? 'null',
+        foto: json["foto"],
+        jenisKelamin: json["jenis_kelamin"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -105,21 +98,20 @@ class Body {
         "username": username,
         "password": password,
         "email": email,
-        "id_sekolah": idSekolah,
+        "sekolah": sekolah,
         "no_telp": noTelp,
         "agama": agama,
-        "tanggal_lahir": tanggalLahir,
+        "tangal_lahir": "${tangalLahir.year.toString().padLeft(4, '0')}-${tangalLahir.month.toString().padLeft(2, '0')}-${tangalLahir.day.toString().padLeft(2, '0')}",
         "token": token,
         "cv": cv,
         "resume": resume,
         "status": status,
-        "status_magang": statusMagang,
+        "statusMagang": statusMagang,
         "role": role,
-        "crate_add": crateAdd,
-        "update_add": updateAdd,
-        "expired_token": expiredToken ?? 'null',
-        "tentang-saya": tentangSaya,
+        "create_at": createAt.toIso8601String(),
+        "update_at": updateAt,
         "nama": nama,
-        "foto": foto ?? 'null.jpg',
+        "foto": foto,
+        "jenis_kelamin": jenisKelamin,
     };
 }

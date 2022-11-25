@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Penghargaan extends StatelessWidget {
   const Penghargaan({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,9 +13,7 @@ class Penghargaan extends StatelessWidget {
         backgroundColor: ColorHelpers.colorNavbarProfile,
         automaticallyImplyLeading: false,
         leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: Get.back,
           icon: Icon(
             Icons.arrow_back,
           ),
@@ -27,6 +26,16 @@ class Penghargaan extends StatelessWidget {
               fontFamily: "",
               fontWeight: FontWeight.w600),
         ),
+      ),
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () async {
+              SharedPreferences sharedPreferences =
+                  await SharedPreferences.getInstance();
+              sharedPreferences.clear();
+              Get.offNamed("/login");
+            },
+            child: Text('logout')),
       ),
     );
   }

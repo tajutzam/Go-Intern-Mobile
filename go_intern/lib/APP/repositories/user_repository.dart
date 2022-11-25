@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
   Future<http.Response> updateTentangSaya(String tentangSaya, int id) async {
@@ -23,12 +24,13 @@ class UserRepository {
   }
 
   uploadImage(filename, path, username) async {
+    var fileNamevalue = filename.split("/").last;
     var url = "${UrlHelper.baseUrl}/pencarimagang/upload/image";
     final request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields['username'] = username;
     final file = http.MultipartFile.fromBytes(
         'avatar', File(filename).readAsBytesSync(),
-        filename: filename.split("/").last);
+        filename: fileNamevalue);
     request.files.add(file);
     var res = await request.send().then(
       (value) {
@@ -54,7 +56,13 @@ class UserRepository {
     var url = "${UrlHelper.baseUrl}/findby/username";
     Map<String, dynamic> data = {"username": username};
     var response = await http.post(Uri.parse(url), body: jsonEncode(data));
-    print(response.body);
+    return response;
+  }
+
+  Future<http.Response> findById(id) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/findbyid";
+    Map<String, dynamic> data = {"id": id};
+    var response = await http.post(Uri.parse(url) , body: jsonEncode(data));
     return response;
   }
 }

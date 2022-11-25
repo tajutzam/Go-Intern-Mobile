@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
+import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/login_response.dart';
 import 'package:go_intern/APP/services/user_service.dart';
@@ -7,27 +9,36 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardController extends GetxController {
   var controller = TextEditingController();
-  var foto = "".obs;
+  var foto = "woman.png".obs;
   var username = "".obs;
   var interactChange = 0.obs;
   UserService userService = UserService();
   UserResponse? userResponse;
-
-  getDataUser(ys) async {
+  var useC = Get.find<UserController>();
+  getDataUser(ys, filename, path) async {
     print('get data user');
-    userResponse = await userService.getDataUser(ys);
-    print(userResponse!.body[0].username);
+    await useC.uploadImage(filename, path);
+    var userResponse = await userService.getDataUser(ys);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var boolres = await sharedPreferences.remove('foto');
+    print(boolres);
+    sharedPreferences.setString('foto', userResponse.body[0].foto);
+    print(sharedPreferences.getString('foto'));
     interactChange.value++;
   }
 
   @override
   void onInit() async {
-    super.onInit();
+    // dashboard controller hanya untuk menjalankan foto kosong
+    print('run on init , dash');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    username.value = sharedPreferences.getString('username')!;
-    print("Foto ku " + sharedPreferences.getString('foto')!);
+    print(sharedPreferences.getInt('id'));
     if (sharedPreferences.getString('foto') != 'null') {
-      foto.value = sharedPreferences.getString('foto')!;
+      print('masuk ke if pertama');
+      print("ini adalah foto di shared ${sharedPreferences.getString('foto')}");
+      if (sharedPreferences.getString('foto') != null) {
+        foto.value = sharedPreferences.getString('foto')!;
+      }
     } else {
       if (sharedPreferences.getString('jenis_kelamin') == 'P') {
         foto.value = "woman.png";
@@ -35,18 +46,7 @@ class DashboardController extends GetxController {
         foto.value = "man.png";
       }
     }
-    if (userResponse != null) {
-      print('login response not null');
-    }
-    ever(
-      interactChange,
-      (callback) async {
-        print('change');
-        foto.value = userResponse!.body[0].foto;
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('foto' , foto.value);
-      },
-    );
+    super.onInit();
   }
 
   @override
@@ -63,5 +63,19 @@ class DashboardController extends GetxController {
         foto.value = "man.png";
       }
     }
+    ever(
+      interactChange,
+      (callback) async {
+        print('change');
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        var id = sharedPreferences.getInt('id');
+        print(id);
+        UserFindByIdResponse user = await userService.findById(id);
+        print(user.body[0].foto);
+        sharedPreferences.setString('foto', user.body[0].foto);
+        foto.value = sharedPreferences.getString('foto')!;
+      },
+    );
   }
 }

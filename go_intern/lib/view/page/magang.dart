@@ -35,7 +35,7 @@ class Magang extends StatelessWidget {
               borderSide:
                   BorderSide(color: ColorHelpers.backgroundBlueNew, width: 3)),
           controller: c.tabController,
-          tabs: [
+          tabs: const [
             Tab(
               child: Text("Magang Untukmu",
                   style: TextStyle(fontSize: 15, fontFamily: "Times")),
