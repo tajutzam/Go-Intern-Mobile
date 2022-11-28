@@ -53,8 +53,8 @@ class DataPencariMagang {
       required this.tentangSaya,
       required this.nama,
       required this.foto , 
-      required this.jenisKelamin
-      // required this.syaratMain
+      required this.jenisKelamin , 
+      required this.idPenghargaan // required this.syaratMain
       });
   int id;
   String username;
@@ -77,7 +77,7 @@ class DataPencariMagang {
   String nama;
   String foto;
   String jenisKelamin;
-  // SyaratMain syaratMain;
+  int idPenghargaan;
   factory DataPencariMagang.fromJson(Map<String, dynamic> json) =>
       DataPencariMagang(
           id: json["id"],
@@ -100,8 +100,8 @@ class DataPencariMagang {
           tentangSaya: json['tentang-saya'] ?? '',
           nama: json['nama'] ?? 'null',
           foto: json['foto'] ?? 'null' , 
-          jenisKelamin: json['jenis_kelamin']
-          // syaratMain: json['syaratMain']
+          jenisKelamin: json['jenis_kelamin'] , 
+          idPenghargaan: json['id_penghargaan']
           );
   Map<String, dynamic> toJson() => {
         "id": id,

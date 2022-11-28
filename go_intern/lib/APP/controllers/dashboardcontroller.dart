@@ -11,10 +11,12 @@ class DashboardController extends GetxController {
   var controller = TextEditingController();
   var foto = "woman.png".obs;
   var username = "".obs;
+
   var interactChange = 0.obs;
+  var dataSekolahIfexist = {}.obs;
   UserService userService = UserService();
   UserResponse? userResponse;
-  var useC = Get.find<UserController>();
+  var useC = Get.put(UserController());
   getDataUser(ys, filename, path) async {
     print('get data user');
     await useC.uploadImage(filename, path);
@@ -29,7 +31,6 @@ class DashboardController extends GetxController {
 
   @override
   void onInit() async {
-    // dashboard controller hanya untuk menjalankan foto kosong
     print('run on init , dash');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     print(sharedPreferences.getInt('id'));
@@ -40,6 +41,7 @@ class DashboardController extends GetxController {
         foto.value = sharedPreferences.getString('foto')!;
       }
     } else {
+      print(sharedPreferences.getString('jenis_kelamin'));
       if (sharedPreferences.getString('jenis_kelamin') == 'P') {
         foto.value = "woman.png";
       } else if (sharedPreferences.getString('jenis_kelamin') == 'L') {
@@ -49,19 +51,48 @@ class DashboardController extends GetxController {
     super.onInit();
   }
 
+  checkFoto() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    print("${sharedPreferences.getString('foto')} / foto");
+    if (sharedPreferences.getString('foto') == 'null') {
+      print('mull if');
+      if (sharedPreferences.getString('jenis_kelamin') != null) {
+        print('mi;asds');
+        if (sharedPreferences.getString('jenis_kelamin') == 'P') {
+          foto.value = "woman.png";
+        } else if (sharedPreferences.getString('jenis_kelamin') == 'L') {
+          foto.value = "man.png";
+        }
+      } else {
+        print('jenis kelamin null');
+      }
+    } else {
+      foto.value = sharedPreferences.getString('foto')!;
+    }
+  }
+
   @override
   void onReady() async {
+    print('on reader');
     super.onReady();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    username.value = sharedPreferences.getString('username')!;
+    print("${sharedPreferences.getString('foto')} / foto");
     if (sharedPreferences.getString('foto') != 'null') {
-      foto.value = sharedPreferences.getString('foto')!;
-    } else {
+      print('mull if');
+      var fototemp;
+      if (sharedPreferences.getString('foto') != null) {
+        fototemp = sharedPreferences.getString('foto');
+      }
+      foto.value = fototemp ?? "";
+    } else if (sharedPreferences.getString('jenis_kelamin') != null) {
+      print('mi;asds');
       if (sharedPreferences.getString('jenis_kelamin') == 'P') {
         foto.value = "woman.png";
       } else if (sharedPreferences.getString('jenis_kelamin') == 'L') {
         foto.value = "man.png";
       }
+    } else {
+      print('jenis kelamin null');
     }
     ever(
       interactChange,

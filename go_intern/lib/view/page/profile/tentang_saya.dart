@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
+import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 
 class TentangSaya extends StatelessWidget {
   TentangSaya({super.key});
   final tentC = Get.put(UserController());
   var formC = GlobalKey<FormState>();
-
+  final logC = Get.find<LoginController>();
   @override
   Widget build(BuildContext context) {
     var temp = tentC.ttgSayaC.text;
@@ -90,15 +91,15 @@ class TentangSaya extends StatelessWidget {
                       Get.snackbar(
                           'Succes', 'Berhasil Memperbarui Tentang saya',
                           backgroundColor: ColorHelpers.colorNavbarProfile);
+                      logC.interactTentangSaya.value++;
                       Future.delayed(
                         Duration(seconds: 2),
                         () {
                           Navigator.of(context).pop();
                         },
                       );
-                    }else{
-                      Get.snackbar(
-                          'Failed', 'Gagal  Memperbarui Tentang saya',
+                    } else {
+                      Get.snackbar('Failed', 'Gagal  Memperbarui Tentang saya',
                           backgroundColor: ColorHelpers.colorNavbarProfile);
                     }
                   }

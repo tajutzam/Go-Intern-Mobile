@@ -2,12 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/APP/model/login_response.dart';
 import 'package:go_intern/APP/services/sekolah_service.dart';
 import 'package:go_intern/APP/services/skill_service.dart';
+import 'package:go_intern/APP/services/user_service.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
+import 'package:go_intern/main.dart';
+import 'package:go_intern/view/page/homepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,12 +20,33 @@ class LoginController extends GetxController {
   final usC = TextEditingController();
   final passC = TextEditingController();
   final storage = GetStorage();
-  List dataList = ["", "", "", ""];
-
+  var dataList = <String>["", "", "", ""].obs;
+  UserService userService = UserService();
+  var nama = "".obs;
+  var interactPendidikan = 0.obs;
+  var interactTentangSaya = 0.obs;
+  var interactPenghargaan = 0.obs;
+  var interactSkill = 0.obs;
+  List datajurusanTemp = [];
+  var dataSekolahUser = {}.obs;
   SekolahService sekolahService = SekolahService();
   SkilService skilService = SkilService();
+  var judulPenghargaan = "".obs;
+  var filenamePenghargaan = "".obs;
+  TextEditingController judulC = TextEditingController();
+  var idPenghargaanVal = 0.obs;
+
+  refreshSkill() {
+    dataList[2] = "skill";
+  }
+
+  refreshTentangSaya() {
+    dataList[0] = "tentang saya";
+  }
 
   login() async {
+    print('login');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String url = "${UrlHelper.baseUrl}/login";
     Map<String, String> sendData = {
       "username": usC.text,
@@ -32,7 +57,7 @@ class LoginController extends GetxController {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         });
-    print(respons.body);
+
     var data = jsonDecode(respons.body);
     if (respons.statusCode == 404) {
       Get.snackbar('Gagal Login', data['body'][0],
@@ -47,22 +72,21 @@ class LoginController extends GetxController {
           colorText: ColorHelpers.colorBlackText,
           backgroundColor: ColorHelpers.colorNavbarProfile);
     } else {
+      var dashC = Get.put(DashboardController());
+      // dashC.checkFoto();
       Get.snackbar("Succes", "Berhasil Login",
           colorText: Color.fromRGBO(39, 39, 39, 1),
           backgroundColor: Colors.green[100]);
       LoginResponse dataPencariMagang = LoginResponse.fromJson(data);
       var tentangSaya = dataPencariMagang.body[0][0].tentangSaya;
+
       dataList[0] = tentangSaya;
       var response =
           await skilService.showSkill(dataPencariMagang.body[0][0].id);
       var skils = jsonDecode(response.body);
-      print(skils);
       if (skils['status'] == 'ok') {
-        dataList[2] = skils['skills'];
+        dataList[2] = "ada data skill";
       }
-      var dashC = Get.put(DashboardController());
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
       sharedPreferences.clear();
       sharedPreferences.setString(
           'username', dataPencariMagang.body[0][0].username);
@@ -76,21 +100,58 @@ class LoginController extends GetxController {
       sharedPreferences.setString('foto', dataPencariMagang.body[0][0].foto);
       sharedPreferences.setString(
           'jenis_kelamin', dataPencariMagang.body[0][0].jenisKelamin);
-      Future.delayed(
-          Duration(seconds: 2),
-          () => Get.offNamed(
-                "/home",
-                arguments: [
-                  {
-                    "agama": dataPencariMagang.body[0][0].agama,
-                    "username": dataPencariMagang.body[0][0].username,
-                    "password": dataPencariMagang.body[0][0].password,
-                    "no-telp": dataPencariMagang.body[0][0].noTelp,
-                    "tanggal-lahir": dataPencariMagang.body[0][0].tanggalLahir,
-                    "id-sekolah": dataPencariMagang.body[0][0].idSekolah,
-                  }
-                ],
-              ));
+      succesLogin();
+      sharedPreferences.setInt(
+          'penghargaan', dataPencariMagang.body[0][0].idPenghargaan);
+      print(sharedPreferences.getString('jenis_kelamin'));
+      dashC.checkFoto();
+      Get.off(HomePageScrenn.new);
+    }
+  }
+
+  showDatajurusan() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    var id = sharedPreferences.getInt('id');
+    var response = await userService.showDataSekolah(id);
+    Map<String, dynamic> decoded = jsonDecode(response.body);
+    decoded.forEach((key, value) {
+      datajurusanTemp.add(value);
+    });
+    if (response.statusCode == 200) {
+      var dataResponse = jsonDecode(response.body);
+      dataList[1] = dataResponse['body'][0]['jurusan'];
+      dataSekolahUser.addAll(dataResponse);
+    }
+  }
+
+  succesLogin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    showDatajurusan();
+    nama.value = sharedPreferences.getString('nama')!;
+    getDatPenghargaan();
+  }
+
+  showPenghargaanByPencariMagang() async {
+    var response = await userService.showPenghargaan();
+    var responseData = jsonDecode(response.body);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove('penghargaan');
+    var id = responseData['body'][0]['id_penghargaan'];
+    sharedPreferences.setInt('penghargaan', id);
+  }
+
+  getDatPenghargaan() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var idPenghargaan = sharedPreferences.getInt('penghargaan');
+    if (idPenghargaan != 0) {
+      dataList[3] = "ada datanya";
+      interactPenghargaan.value = idPenghargaan!;
+      var dataPenghargaan =
+          await userService.showPenghargaanuser(idPenghargaan);
+      judulPenghargaan.value = dataPenghargaan.body[0].judul;
+      filenamePenghargaan.value = dataPenghargaan.body[0].file;
+      judulC.text = judulPenghargaan.value;
     }
   }
 
@@ -98,5 +159,35 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     sekolahService.getAllData();
+    ever(
+      interactPendidikan,
+      (callback) {
+        showDatajurusan();
+      },
+    );
+    ever(
+      interactSkill,
+      (callback) {
+        refreshSkill();
+      },
+    );
+    ever(
+      interactTentangSaya,
+      (callback) => refreshTentangSaya(),
+    );
+
+    ever(
+      interactPenghargaan,
+      (callback) async {
+        await showPenghargaanByPencariMagang();
+        await getDatPenghargaan();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    usC.clear();
+    passC.clear();
   }
 }

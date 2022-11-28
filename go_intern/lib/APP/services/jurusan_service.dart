@@ -11,7 +11,12 @@ class JurusanService {
     var dataResponse = await jurusanRepository.findAllJurusan();
     print(dataResponse.body);
     var jurusan = Jurusan.fromJson(jsonDecode(dataResponse.body));
-    
+
     return jurusan;
+  }
+
+  findByJurusan(jurusan) async {
+    var response = await jurusanRepository.findByJurusan(jurusan);
+    return response;
   }
 }

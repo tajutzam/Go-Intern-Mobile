@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
-import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/view/page/dashboard.dart';
 import 'package:go_intern/view/page/homepage.dart';
@@ -19,14 +18,13 @@ import 'package:go_intern/view/splash/splash.dart';
 
 void main(List<String> args) async {
   await GetStorage.init();
-  runApp(GoInternApp());
+  runApp(GoInternApp());         
 }
-
 // ignore: must_be_immutable
 class GoInternApp extends StatelessWidget {
   GoInternApp({super.key});
-  var userC = Get.put(UserController());
   var logC = Get.put(LoginController());
+  var userC = Get.put(UserController());
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -70,7 +68,6 @@ class GoInternApp extends StatelessWidget {
     );
   }
 }
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override

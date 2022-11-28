@@ -9,8 +9,10 @@ import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
+import 'package:go_intern/view/page/homepage.dart';
 import 'package:go_intern/view/page/profile/update_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
   List data = ["Tentang Saya", "Pendidikan", "Skill", "Penghargaan"];
@@ -18,6 +20,7 @@ class ProfilePage extends StatelessWidget {
   var usC = Get.find<UserController>();
   var logC = Get.find<LoginController>();
   var dashC = Get.put(DashboardController());
+  var botC = Get.find<ControllerBottom>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,10 +82,11 @@ class ProfilePage extends StatelessWidget {
                                         dialogTitle: 'Select image',
                                         allowCompression: true);
                                 if (result != null) {
-                                  print('not null ${result.files.single.path}');     
+                                  print('not null ${result.files.single.path}');
                                   var username =
                                       sharedPreferences.getString('username');
-                                  dashC.getDataUser(username , result.files.single.path , '');
+                                  dashC.getDataUser(
+                                      username, result.files.single.path, '');
                                   print(dashC.interactChange);
                                 }
                               },
@@ -131,12 +135,21 @@ class ProfilePage extends StatelessWidget {
                     //         size: 30,
                     //       )),
                     // )
+                    IconButton(
+                        onPressed: () {
+                          _scaffoldKey.currentState?.openEndDrawer();
+                          print('open drawer');
+                        },
+                        icon: Icon(
+                          Icons.settings,
+                          color: Colors.white,
+                        ))
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 20),
                   child: Text(
-                    usC.sharedPreferences!.getString('nama').toString(),
+                    logC.nama.value,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -183,10 +196,7 @@ class ProfilePage extends StatelessWidget {
               height: 100,
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [ColorHelpers.colorNavbarProfile, Colors.white]),
+                color: Colors.white,
                 boxShadow: [
                   BoxShadow(
                       blurRadius: 0.5,
@@ -285,20 +295,22 @@ class ProfilePage extends StatelessWidget {
                                   Get.toNamed("/penghargaan");
                                 }
                               },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  logC.dataList[index] == ""
-                                      ? Text(
-                                          "Tambahkan ${data[index]}",
-                                          textAlign: TextAlign.start,
-                                        )
-                                      : Text("Update ${data[index]}",
-                                          textAlign: TextAlign.start),
-                                  Icon(logC.dataList[index] == ""
-                                      ? Icons.add
-                                      : Icons.edit)
-                                ],
+                              child: Obx(
+                                () => Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    logC.dataList.value[index] == ""
+                                        ? Text(
+                                            "Tambahkan ${data[index]}",
+                                            textAlign: TextAlign.start,
+                                          )
+                                        : Text("Update ${data[index]}",
+                                            textAlign: TextAlign.start),
+                                    Icon(logC.dataList.value[index] == ""
+                                        ? Icons.add
+                                        : Icons.edit)
+                                  ],
+                                ),
                               ),
                             ),
                           )
@@ -313,8 +325,139 @@ class ProfilePage extends StatelessWidget {
         ],
       ),
       endDrawer: Drawer(
-        child: ListView(),
-      ),
+          child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            height: 120,
+            color: ColorHelpers.colorV2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+              child: Text(
+                'Pengaturan Data',
+                style: TextStyle(
+                    fontSize: 20, fontFamily: 'poppins', color: Colors.white),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ListView(
+                  shrinkWrap: true,
+                  children: const [
+                    ListTile(
+                      leading: Icon(
+                        Icons.sentiment_satisfied_alt_outlined,
+                        color: ColorHelpers.colorV2,
+                      ),
+                      title: Text(
+                        'Personal',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.security,
+                        color: ColorHelpers.colorV2,
+                      ),
+                      title: Text(
+                        'Keamanan',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+                ListTile(
+                  onTap: () {
+                    Get.defaultDialog(
+                      content: Text(
+                        'Dengan menekan ok , kamu akan logout dari akun kamu',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w500),
+                      ),
+                      radius: 4,
+                      title: "Perhatian",
+                      confirmTextColor: Colors.black,
+                      confirm: InkWell(
+                        onTap: () async {
+                          SharedPreferences sharedPreferences =
+                              await SharedPreferences.getInstance();
+                          var isClear = await sharedPreferences.clear();
+                          sharedPreferences.remove('nama');
+                          // ignore: invalid_use_of_protected_member
+                         
+                          if (isClear) {
+                            logC.dispose();
+                            botC.tabIndex.value = 0;
+                            Get.snackbar('Sucess', 'Berhasil logout');
+                            Get.offNamed("/login");
+                          }
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: ColorHelpers.backgroundBlueNew,
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Center(
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                      cancel: InkWell(
+                        onTap: () {
+                          print('cancel');
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: ColorHelpers.backgroundBlueNew,
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Center(
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  leading: Icon(Icons.logout),
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'poppins',
+                        fontWeight: FontWeight.w500),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      )),
     );
   }
 }

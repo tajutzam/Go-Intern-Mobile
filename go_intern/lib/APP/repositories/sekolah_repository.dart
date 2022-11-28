@@ -22,4 +22,31 @@ class SekolahRepository {
     var response = await http.get(Uri.parse(url));
     return Sekolah.fromJson(jsonDecode(response.body));
   }
+
+  addSekolah(sekolah) async {
+    var url = "${UrlHelper.baseUrl}/sekolah/save";
+    var data = {
+      "sekolah": sekolah,
+    };
+    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    print(response.body);
+
+    return response;
+  }
+
+  addJurusanAnnSekolah(sekolah, jurusan) async {
+    var url = "${UrlHelper.baseUrl}/sekolah/addjurusantosekolah";
+    var data = {"sekolah": sekolah, "jurusan": jurusan};
+    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    print(response.body);
+    return response;
+  }
+
+  cariSekolah(sekolah) async {
+    var url = "${UrlHelper.baseUrl}/sekolah/findbysekolah";
+    var data = {"sekolah": sekolah};
+    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    print(response.body);
+    return response;
+  }
 }

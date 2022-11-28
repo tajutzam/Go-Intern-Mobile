@@ -32,22 +32,18 @@ class DataSekolah {
     DataSekolah({
        required this.id,
        required this.namaSekolah,
-       required this.jurusan,
     });
 
     int id;
     String namaSekolah;
-    int jurusan;
 
     factory DataSekolah.fromJson(Map<String, dynamic> json) => DataSekolah(
         id: json["id"],
         namaSekolah: json["nama_sekolah"],
-        jurusan: json["jurusan"],
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "nama_sekolah": namaSekolah,
-        "jurusan": jurusan,
     };
 }

@@ -13,7 +13,6 @@ class DashboardScrenn extends StatelessWidget {
   var data = Get.arguments;
   var dashC = Get.put(DashboardController());
   var loginC = Get.put(LoginController());
-
   @override
   Widget build(BuildContext context) {
     // String username = data[0]['username'];
@@ -51,7 +50,8 @@ class DashboardScrenn extends StatelessWidget {
                                 CircularProgressIndicator(),
                             fit: BoxFit.cover,
                             // ignore: unnecessary_null_comparison
-                            errorWidget: (context, url, error) => Image.asset("assets/images/woman.png"),
+                            errorWidget: (context, url, error) =>
+                                Image.asset("assets/images/woman.png"),
                             imageUrl: UrlHelper.baseUrlImagePencariMagang +
                                 dashC.foto.value.toString(),
                             imageBuilder: (context, imageProvider) => Container(
@@ -72,7 +72,7 @@ class DashboardScrenn extends StatelessWidget {
                     () => Padding(
                       padding: const EdgeInsets.only(top: 10, left: 20),
                       child: Text(
-                        "Hai ,${dashC.username.value}  ayo temukan tempat magang terbaik mu",
+                        "Hai ,${loginC.nama}  ayo temukan tempat magang terbaik mu",
                         style: TextStyle(
                             color: ColorHelpers.colorBlackText,
                             fontSize: 20,
@@ -365,14 +365,7 @@ class DashboardScrenn extends StatelessWidget {
                     height: 150,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: ColorHelpers.backgroundColorValidasi,
-                      gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: const [
-                            ColorHelpers.colorNavbarProfile,
-                            Colors.white
-                          ]),
+                      color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                             blurRadius: 0.5,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard.dart';
@@ -11,7 +12,6 @@ import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
 // ignore: must_be_immutable
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
-  
   List apbar = [
     PreferredSize(
         preferredSize: Size.fromHeight(100),

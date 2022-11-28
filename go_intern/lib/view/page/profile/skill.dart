@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/SkillController.dart';
+import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +13,7 @@ class Skill extends StatelessWidget {
 
   var skilC = Get.put(SkillController());
   final _form = GlobalKey<FormState>();
+  final logC = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +97,8 @@ class Skill extends StatelessWidget {
                             await skilC.saveSkill(skilC.dataSkil, id!);
                         if (isTrue) {
                           Get.snackbar('Succes', 'Berhasil  menambahkan skill');
+                          // ignore: use_build_context_synchronously
+                          logC.interactSkill.value++;
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pop();
                         } else {

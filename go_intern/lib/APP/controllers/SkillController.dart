@@ -10,8 +10,8 @@ class SkillController extends GetxController {
   List dataSkil = [].obs;
   final textC = TextEditingController();
   SkilService skilService = SkilService();
-  List storageSkill = [];
-
+  List storageSkill = [].obs;
+  var interactSkill = 0.obs;
   addToList(value) {
     dataSkil.add(value);
     // storageSkill.add(value);
@@ -47,16 +47,14 @@ class SkillController extends GetxController {
       return false;
   }
   }
-
   @override
   void onInit() async {
-    // TODO: implement onInit
+    
     super.onInit();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var response = await skilService.showSkill(sharedPreferences.getInt('id'));
     var dataSKilAsMap = jsonDecode(response.body) as Map<String, dynamic>;
     SkillMain skilMain = SkillMain.fromJson(dataSKilAsMap);
-    var count = 0;
     for (int i = 0; i < skilMain.skills.length; i++) {
       Map<String, dynamic> tempMap = {
         'id': skilMain.skills[i].id,
@@ -65,7 +63,6 @@ class SkillController extends GetxController {
       dataSkil.add(tempMap);
       storageSkill.add(tempMap);
     }
-
     print(dataSkil);
   }
 }

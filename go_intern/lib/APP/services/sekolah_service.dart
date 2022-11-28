@@ -25,4 +25,21 @@ class SekolahService {
       return true;
     }
   }
+
+  addSekolah(sekolah) async {
+    var response = await sekolahRepository.addSekolah(sekolah);
+    return response;
+  }
+
+  addJurusanToSekolah(sekolah, jurusan) async {
+    var response =
+        await sekolahRepository.addJurusanAnnSekolah(sekolah, jurusan);
+    return response;
+  }
+
+  cariSekolah(sekolah) async {
+    var response = await sekolahRepository.cariSekolah(sekolah);
+    print(response.body);
+    return response;
+  }
 }
