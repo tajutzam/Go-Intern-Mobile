@@ -7,7 +7,7 @@ import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard.dart';
 import 'package:go_intern/view/page/magang.dart';
 import 'package:go_intern/view/page/profile/profile.dart';
-import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
+import 'package:go_intern/view/page/recent_apply.dart';
 
 // ignore: must_be_immutable
 // ignore: must_be_immutable
@@ -43,7 +43,7 @@ class HomePageScrenn extends StatelessWidget {
             const BottomNavigationBarItem(
                 icon: Icon(Icons.work), label: "Magang"),
             const BottomNavigationBarItem(
-                icon: Icon(Icons.work_history), label: "Baru-baru Ini Apply"),
+                icon: Icon(Icons.work_history), label: "Aktivitas"),
             const BottomNavigationBarItem(
                 icon: Icon(Icons.person), label: "Profile")
           ],
@@ -78,7 +78,7 @@ class HomePageScrenn extends StatelessWidget {
             children: <Widget>[
               DashboardScrenn(),
               Magang(),
-              RecentApplyPage(),
+              recent_apply(),
               ProfilePage()
             ],
           ),
