@@ -90,7 +90,7 @@ class TentangSaya extends StatelessWidget {
                     if (isSucces) {
                       Get.snackbar(
                           'Succes', 'Berhasil Memperbarui Tentang saya',
-                          backgroundColor: ColorHelpers.colorNavbarProfile);
+                          backgroundColor: ColorHelpers.colorSnackbar , colorText: Colors.white);
                       logC.interactTentangSaya.value++;
                       Future.delayed(
                         Duration(seconds: 2),
@@ -100,7 +100,7 @@ class TentangSaya extends StatelessWidget {
                       );
                     } else {
                       Get.snackbar('Failed', 'Gagal  Memperbarui Tentang saya',
-                          backgroundColor: ColorHelpers.colorNavbarProfile);
+                          backgroundColor: ColorHelpers.colorSnackbarfailed , colorText: Colors.white);
                     }
                   }
                 },

@@ -1,9 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/penghargaan_response.dart';
+import 'package:go_intern/APP/model/user_response.dart';
 import 'package:go_intern/APP/repositories/user_repository.dart';
+import 'package:go_intern/helpers/color.dart';
+import 'package:go_intern/helpers/url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
@@ -12,7 +17,8 @@ class UserService {
   uploadImage(filename, path) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var username = sharedPreferences.getString('username');
-    userRepository.uploadImage(filename, path, username);
+    return await userRepository.uploadImage(filename, path, username);
+    
   }
 
   Future<UserResponse> getDataUser(username) async {
@@ -47,5 +53,85 @@ class UserService {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getInt('id');
     return await userRepository.showPenghargaanByPencariMagang(id);
+  }
+
+  updateDeskripsiSekolah(deskripsi) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    var response = await userRepository.updateDeskripsi(id, deskripsi);
+    return response;
+  }
+
+  showDataUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var username = sharedPreferences.getString('username');
+    var response = await userRepository.showdataUser(username);
+    if (response.statusCode == 200) {
+      return Datauser.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+  updateDataPersonal({name, agama, email, jenisKelamin, tanggalLahir}) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    var response = await userRepository.updateDataPersonal(
+        name: name,
+        agama: agama,
+        email: email,
+        jenisKelamin: jenisKelamin,
+        tanggalLahir: tanggalLahir,
+        id: id);
+    print(response.body);
+    var responseDecoded = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      Get.snackbar(
+          'success', "${responseDecoded['message']} , Harap login kembali",
+          backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
+      return true;
+    } else {
+      Get.snackbar('failed', responseDecoded['message'],
+          backgroundColor: ColorHelpers.colorSnackbarfailed,
+          colorText: Colors.white);
+      return false;
+    }
+  }
+
+  Future<bool> updateDataKeamanan(username, password) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    var response = await userRepository.updateDataKeamanan(
+        username: username, password: password, id: id);
+    var responseDecoded = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      Get.snackbar('Success', responseDecoded['message'],
+          backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
+      return true;
+    } else {
+      Get.snackbar('failed', responseDecoded['message'],
+          backgroundColor: ColorHelpers.colorSnackbarfailed,
+          colorText: Colors.white);
+      return false;
+    }
+  }
+
+  updateCv({filename}) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var username = sharedPreferences.getString('username');
+    var response = await userRepository.updateCv(username, filename);
+    return response;
+  }
+
+  updateNoHp(npHp) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    userRepository.updateNoHp(id: id, no_telp: npHp);
+  }
+
+  updateSuratLamaran({suratLamaran}) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    userRepository.updateSuratLamaran(suratLamaran, id);
   }
 }

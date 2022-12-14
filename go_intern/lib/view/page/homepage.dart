@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
+import 'package:go_intern/APP/controllers/personalcontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard.dart';
 import 'package:go_intern/view/page/magang.dart';
@@ -12,6 +13,8 @@ import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
 // ignore: must_be_immutable
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
+  var personalC = Get.put(PersonalController());
+  var userC = Get.find<UserController>();
   List apbar = [
     PreferredSize(
         preferredSize: Size.fromHeight(100),
@@ -57,10 +60,12 @@ class HomePageScrenn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    personalC.fetchdataUser();
+    userC.fetchDataCv();
     return Scaffold(
       // appBar: PreferredSize(
       //   child: Obx(() => IndexedStack(
-      //         index: controller.tabIndex.value,
+      //         index: controller.tabIndex.value,userData
       //         children: [apbar[0], apbar[1], apbar[2]],
       //       )),
       //   preferredSize: Size.fromHeight(60),

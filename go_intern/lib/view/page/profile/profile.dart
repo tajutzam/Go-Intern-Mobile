@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,11 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
+import 'package:go_intern/APP/controllers/location_controller.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/homepage.dart';
-import 'package:go_intern/view/page/profile/update_data.dart';
+import 'package:go_intern/view/page/profile/cvView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -21,6 +24,7 @@ class ProfilePage extends StatelessWidget {
   var logC = Get.find<LoginController>();
   var dashC = Get.put(DashboardController());
   var botC = Get.find<ControllerBottom>();
+  var locationC = Get.find<LocationController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +41,9 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -50,7 +57,7 @@ class ProfilePage extends StatelessWidget {
                                   CircularProgressIndicator(),
                               fit: BoxFit.cover,
                               imageUrl: UrlHelper.baseUrlImagePencariMagang +
-                                  dashC.foto.value.toString(),
+                                  dashC.foto.value,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 height: 70,
@@ -76,7 +83,8 @@ class ProfilePage extends StatelessWidget {
                                         allowedExtensions: [
                                           'jpg',
                                           'png',
-                                          'jpeg'
+                                          'jpeg',
+                                          ''
                                         ],
                                         allowMultiple: false,
                                         dialogTitle: 'Select image',
@@ -85,9 +93,9 @@ class ProfilePage extends StatelessWidget {
                                   print('not null ${result.files.single.path}');
                                   var username =
                                       sharedPreferences.getString('username');
-                                  dashC.getDataUser(
+                                  await dashC.getDataUser(
                                       username, result.files.single.path, '');
-                                  print(dashC.interactChange);
+                                  dashC.interactChange++;
                                 }
                               },
                               child: Container(
@@ -123,18 +131,6 @@ class ProfilePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(right: 20, top: 15),
-                    //   child: IconButton(
-                    //       onPressed: () {
-
-                    //       },
-                    //       icon: Icon(
-                    //         Icons.,
-                    //         color: Colors.white,
-                    //         size: 30,
-                    //       )),
-                    // )
                     IconButton(
                         onPressed: () {
                           _scaffoldKey.currentState?.openEndDrawer();
@@ -162,7 +158,7 @@ class ProfilePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
-                    children: const [
+                    children: [
                       Icon(
                         Icons.location_on_sharp,
                         color: Colors.white,
@@ -170,14 +166,16 @@ class ProfilePage extends StatelessWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        "Indonesia,Kalimantan barat",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontFamily: "Times",
-                            fontWeight: FontWeight.w500),
-                      )
+                      Obx(
+                        () => Text(
+                          locationC.address.value.toString(),
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontFamily: "Times",
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -191,7 +189,7 @@ class ProfilePage extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: Container(
               height: 100,
               width: double.infinity,
@@ -209,39 +207,142 @@ class ProfilePage extends StatelessWidget {
                 // cek data lengkap tidak
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    child: Text(
-                      "Datamu Kurang lengkap nihh",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  // ignore: unrelated_type_equality_checks
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      child: Text(
+                        usC.pathCv == ""
+                            ? "Aku Bantu lengkapi CV kamu yaa :)"
+                            : "Cv sudah ada nih",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
+
                   SizedBox(
                     height: 7,
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Get.to(UpdateScrenn.new);
-                        },
-                        icon: Icon(
-                          Icons.note_alt,
-                          size: 40,
-                          color: ColorHelpers.colorBlackText,
-                        ),
-                      ),
-                      Text(
-                        'lengkapi sekarang',
-                        style: TextStyle(
-                            fontFamily: 'poppins',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  )
+
+                  Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Obx(
+                        () => usC.pathCv == ""
+                            ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        ColorHelpers.backgroundBlueNew),
+                                onPressed: () async {
+                                  FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles(
+                                          type: FileType.any,
+                                          allowMultiple: false,
+                                          dialogTitle: 'Select File Pendukung',
+                                          allowCompression: true);
+                                  if (result != null) {
+                                    if (result.files.single.extension != 'pdf' &&
+                                        result.files.single.extension !=
+                                            'docx' &&
+                                        result.files.single.extension !=
+                                            'doc' &&
+                                        result.files.single.extension !=
+                                            'txt') {
+                                      Get.snackbar('Failed',
+                                          'Extensions salah , harap pilih pdf atau sejenisnya',
+                                          backgroundColor:
+                                              ColorHelpers.colorSnackbar,
+                                          colorText: Colors.white);
+                                    } else {
+                                      // todo input file penghargaan
+                                      usC.pathCv.value =
+                                          result.files.single.path!;
+                                      usC.addCv();
+                                      // userC.addPennghargaan(result.files.single.path);
+                                    }
+                                  } else {
+                                    print('canceled by user');
+                                  }
+                                },
+                                child: Text(
+                                  'Uppload Cv',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'poppins',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            ColorHelpers.backgroundBlueNew),
+                                    onPressed: () async {
+                                      Get.to(() =>
+                                          CvView(judul: usC.pathCv.value));
+                                    },
+                                    child: Text(
+                                      'Lihat CV',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'poppins',
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            ColorHelpers.backgroundBlueNew),
+                                    onPressed: () async {
+                                      FilePickerResult? result =
+                                          await FilePicker.platform.pickFiles(
+                                              type: FileType.any,
+                                              allowMultiple: false,
+                                              dialogTitle:
+                                                  'Select File Pendukung',
+                                              allowCompression: true);
+                                      if (result != null) {
+                                        if (result.files.single.extension != 'pdf' &&
+                                            result.files.single.extension !=
+                                                'docx' &&
+                                            result.files.single.extension !=
+                                                'doc' &&
+                                            result.files.single.extension !=
+                                                'txt') {
+                                          Get.snackbar('Failed',
+                                              'Extensions salah , harap pilih pdf atau sejenisnya',
+                                              backgroundColor:
+                                                  ColorHelpers.colorSnackbar,
+                                              colorText: Colors.white);
+                                        } else {
+                                          // todo input file penghargaan
+                                          usC.pathCv.value =
+                                              result.files.single.path!;
+                                          usC.addCv();
+                                        }
+                                      } else {
+                                        print('canceled by user');
+                                      }
+                                    },
+                                    child: Text(
+                                      'Edit CV',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'poppins',
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ))
                 ],
               ),
             ),
@@ -346,8 +447,11 @@ class ProfilePage extends StatelessWidget {
               children: [
                 ListView(
                   shrinkWrap: true,
-                  children: const [
+                  children: [
                     ListTile(
+                      onTap: () {
+                        Get.toNamed("/personal");
+                      },
                       leading: Icon(
                         Icons.sentiment_satisfied_alt_outlined,
                         color: ColorHelpers.colorV2,
@@ -361,6 +465,9 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
                     ListTile(
+                      onTap: () {
+                        Get.toNamed("/keamanan");
+                      },
                       leading: Icon(
                         Icons.security,
                         color: ColorHelpers.colorV2,
@@ -395,11 +502,15 @@ class ProfilePage extends StatelessWidget {
                           var isClear = await sharedPreferences.clear();
                           sharedPreferences.remove('nama');
                           // ignore: invalid_use_of_protected_member
-                         
                           if (isClear) {
+                            usC.pathCv.value = "";
+                            logC.logout();
                             logC.dispose();
+                            usC.dispose();
                             botC.tabIndex.value = 0;
-                            Get.snackbar('Sucess', 'Berhasil logout');
+                            Get.snackbar('Sucess', 'Berhasil logout',
+                                backgroundColor: ColorHelpers.colorSnackbar,
+                                colorText: Colors.white);
                             Get.offNamed("/login");
                           }
                         },

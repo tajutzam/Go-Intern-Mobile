@@ -108,7 +108,7 @@ class Penghargaan extends StatelessWidget {
                                   result.files.single.extension != 'doc' &&
                                   result.files.single.extension != 'txt') {
                                 Get.snackbar('Failed',
-                                    'Extensions salah , harap pilih pdf atau sejenisnya');
+                                    'Extensions salah , harap pilih pdf atau sejenisnya' , backgroundColor: ColorHelpers.colorSnackbarfailed , colorText: Colors.white);
                               } else {
                                 // todo input file penghargaan
                                 userC.pathPenghargaan.value =
@@ -212,7 +212,7 @@ class Penghargaan extends StatelessWidget {
                                           result.files.single.extension !=
                                               'txt') {
                                         Get.snackbar('Failed',
-                                            'Extensions salah , harap pilih pdf atau sejenisnya');
+                                            'Extensions salah , harap pilih pdf atau sejenisnya'  , backgroundColor: ColorHelpers.colorSnackbar , colorText: Colors.white);
                                       } else {
                                         // todo input file penghargaan
                                         userC.pathPenghargaan.value =
@@ -254,20 +254,20 @@ class Penghargaan extends StatelessWidget {
                           if (_form.currentState!.validate()) {
                             if (userC.pathPenghargaan.value == "") {
                               Get.snackbar('failed',
-                                  'harap pilih dokumen terlebih dahulu');
+                                  'harap pilih dokumen terlebih dahulu' , colorText: Colors.white , backgroundColor: ColorHelpers.colorSnackbarfailed);
                             } else {
                               var result = await userC.addPennghargaan(
                                   userC.pathPenghargaan.value,
                                   logC.judulC.text);
                               if (result) {
                                 Get.snackbar('succes',
-                                    'Berhasil menambahkan penghargaan');
+                                    'Berhasil menambahkan penghargaan' , colorText: Colors.white , backgroundColor: ColorHelpers.colorSnackbar);
                                 logC.interactPenghargaan.value++;
                                 Navigator.pop(context);
                                 userC.dispose();
                               } else {
                                 Get.snackbar(
-                                    'failed', 'Gagal menambahkan penghargaan');
+                                    'failed', 'Gagal menambahkan penghargaan' , colorText: Colors.white , backgroundColor: ColorHelpers.colorSnackbarfailed);
                               }
                             }
                           }
@@ -281,20 +281,28 @@ class Penghargaan extends StatelessWidget {
                           if (_form.currentState!.validate()) {
                             if (userC.pathPenghargaan.value == "") {
                               Get.snackbar('failed',
-                                  'harap pilih dokumen terlebih dahulu');
+                                  'harap pilih dokumen terlebih dahulu',
+                                  colorText: Colors.white,
+                                  backgroundColor:
+                                      ColorHelpers.colorSnackbarfailed);
                             } else {
                               var result = await userC.addPennghargaan(
                                   userC.pathPenghargaan.value,
                                   logC.judulC.text);
                               if (result) {
                                 Get.snackbar('succes',
-                                    'Berhasil  memperbarui penghargaan');
+                                    'Berhasil  memperbarui penghargaan',
+                                    backgroundColor: ColorHelpers.colorSnackbar,
+                                    colorText: Colors.white);
                                 logC.interactPenghargaan.value++;
                                 Navigator.pop(context);
                                 userC.dispose();
                               } else {
                                 Get.snackbar(
-                                    'failed', 'Gagal menambahkan penghargaan');
+                                    'failed', 'Gagal menambahkan penghargaan',
+                                    colorText: Colors.white,
+                                    backgroundColor:
+                                        ColorHelpers.colorSnackbarfailed);
                               }
                             }
                           }

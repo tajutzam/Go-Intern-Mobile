@@ -54,19 +54,20 @@ class RegisterController extends GetxController {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(dataRegister));
-    var urlSendEmail = UrlHelper.baseUrl + "/verivication/${usC.text}";
+    var urlSendEmail = "${UrlHelper.baseUrl}/verivication/${usC.text}";
     Map<String, dynamic> responseData = json.decode(response.body);
     print(response.body);
     if (responseData['status'] == "oke") {
       var responseSendMail = await http.get(Uri.parse(urlSendEmail));
       Get.snackbar('Success',
           "Berhasil regristasi , harap cek email anda untuk aktifasi",
-          backgroundColor: ColorHelpers.colorNavbarProfile);
+          backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
       Get.offNamed("/login");
     } else if (responseData['status'] == 'failed') {
       print("ok");
       Get.snackbar('Failed', "${responseData['message']}",
-          backgroundColor: ColorHelpers.colorNavbarProfile);
+          backgroundColor: ColorHelpers.colorSnackbarfailed,
+          colorText: Colors.white);
     }
   }
 }

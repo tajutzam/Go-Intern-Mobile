@@ -152,12 +152,19 @@ class Skill extends StatelessWidget {
                                                   await skilC.deleteSkill(id);
                                               if (result) {
                                                 Get.snackbar('Success',
-                                                    'Berhasil Menghapus Skill');
+                                                    'Berhasil Menghapus Skill',
+                                                    colorText: Colors.white,
+                                                    backgroundColor:
+                                                        ColorHelpers
+                                                            .colorSnackbar);
                                                 // ignore: use_build_context_synchronously
                                                 Navigator.of(context).pop();
                                               } else {
                                                 Get.snackbar('failed',
-                                                    'Gagal Menghapus Skill');
+                                                    'Gagal Menghapus Skill',
+                                                    colorText: Colors.white,
+                                                    backgroundColor: ColorHelpers
+                                                        .colorSnackbarfailed);
                                               }
                                             },
                                             child: Text('Delete sekarang')));
@@ -208,12 +215,19 @@ class Skill extends StatelessWidget {
                                                   await skilC.deleteSkill(id);
                                               if (result) {
                                                 Get.snackbar('Success',
-                                                    'Berhasil Menghapus Skill');
+                                                    'Berhasil Menghapus Skill',
+                                                    colorText: Colors.white,
+                                                    backgroundColor:
+                                                        ColorHelpers
+                                                            .colorSnackbar);
                                                 // ignore: use_build_context_synchronously
                                                 Navigator.of(context).pop();
                                               } else {
                                                 Get.snackbar('failed',
-                                                    'Gagal Menghapus Skill');
+                                                    'Gagal Menghapus Skill',
+                                                    colorText: Colors.white,
+                                                    backgroundColor: ColorHelpers
+                                                        .colorSnackbarfailed);
                                               }
                                             },
                                             child: Text('Delete sekarang')));

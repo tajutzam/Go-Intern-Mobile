@@ -23,7 +23,8 @@ class MagangUntukmu extends StatelessWidget {
             ? Obx(
                 () {
                   return LazyLoadScrollView(
-                    onEndOfPage: () => magangController.loadNextPage(),
+                    scrollOffset: magangController.refreshAuto.value,
+                    onEndOfPage: () => magangController.getData(),
                     isLoading: magangController.lastPage,
                     child: ListView.separated(
                       shrinkWrap: true,
@@ -36,7 +37,6 @@ class MagangUntukmu extends StatelessWidget {
                         final DateFormat formater = DateFormat.yMMMEd();
                         var formated = formater.format(
                             magangController.magangMain!.body[index].createAt);
-
                         if (index >= magangController.magangMain!.body.length) {
                           if (!magangController.isDataLoading.value) {
                             magangController.getData();

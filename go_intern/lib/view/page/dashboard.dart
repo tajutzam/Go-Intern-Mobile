@@ -3,9 +3,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
+import 'package:go_intern/APP/controllers/location_controller.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
+import 'package:go_intern/APP/controllers/personalcontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
+import 'package:go_intern/view/page/detail_penyedia.dart';
+import 'package:go_intern/view/page/magang_kategori.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -13,6 +17,8 @@ class DashboardScrenn extends StatelessWidget {
   var data = Get.arguments;
   var dashC = Get.put(DashboardController());
   var loginC = Get.put(LoginController());
+  var locationControler = Get.put(LocationController());
+  var personalC = Get.put(PersonalController());
   @override
   Widget build(BuildContext context) {
     // String username = data[0]['username'];
@@ -99,7 +105,7 @@ class DashboardScrenn extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 10, left: 15, bottom: 10),
             child: Text(
-              "Popular Companies",
+              "Perusahaan Populer",
               style: TextStyle(
                   color: ColorHelpers.colorBlackText,
                   fontSize: 20,
@@ -108,16 +114,28 @@ class DashboardScrenn extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15),
-            child: SizedBox(
-              height: 150,
-              child: CarouselSlider.builder(
-                // padding: EdgeInsets.only(bottom: 10),
-                // scrollDirection: Axis.horizontal,
-                // controller: dashC.scrollController,
-                // reverse: true,
-                itemBuilder: (context, index, int pageview) {
-                  return index % 2 == 0
-                      ? Card(
+            child: FutureBuilder(
+              future: dashC.getPopularPenyedia(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                        child: Text(
+                      'Tidak ada Perusahaan Populer',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'poppins',
+                          color: ColorHelpers.colorBlackText),
+                    )),
+                  );
+                } else {
+                  return SizedBox(
+                    height: 150,
+                    child: CarouselSlider.builder(
+                      itemBuilder: (context, index, int pageview) {
+                        return Card(
                           elevation: 0,
                           color: Theme.of(context).colorScheme.surfaceVariant,
                           child: Container(
@@ -144,7 +162,7 @@ class DashboardScrenn extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
-                                    "Politeknik Negeri Jember",
+                                    dashC.dataPopular[index].namaPerusahaan,
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
@@ -158,7 +176,8 @@ class DashboardScrenn extends StatelessWidget {
                                   children: [
                                     CachedNetworkImage(
                                       height: 70,
-                                      imageUrl: "https://picsum.photos/200",
+                                      imageUrl: UrlHelper.baseUrlImagePenyedia +
+                                          dashC.dataPopular[index].foto,
                                       progressIndicatorBuilder: (context, url,
                                               downloadProgress) =>
                                           CircularProgressIndicator(
@@ -173,16 +192,33 @@ class DashboardScrenn extends StatelessWidget {
                                         width: 80,
                                         child: ElevatedButton(
                                           onPressed: () async {
-                                            SharedPreferences
-                                                sharedPreferences =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            print(sharedPreferences
-                                                .getString('username'));
-                                            print(sharedPreferences
-                                                .getString('agama'));
-                                            print(sharedPreferences
-                                                .getString('tentang-saya'));
+                                            var responseMagang = await dashC
+                                                .getDataMagangPenyedia(dashC
+                                                    .dataPopular[index].id);
+                                            Get.to(
+                                              () => DetailPenyediaPopular(
+                                                namaPerusahaan: dashC
+                                                    .dataPopular[index]
+                                                    .namaPerusahaan,
+                                                email: dashC
+                                                    .dataPopular[index].email,
+                                                jumlahMagang: dashC
+                                                    .dataPopular[index].jumlah,
+                                                alamat: dashC
+                                                    .dataPopular[
+                                                        index] // padding: EdgeInsets.only(bottom: 10),
+                                                    // scrollDirection: Axis.horizontal,
+                                                    // controller: dashC.scrollController,
+                                                    // reverse: true,
+                                                    .alamatPerusahaan,
+                                                foto: dashC
+                                                    .dataPopular[index].foto,
+                                                jumlahMagangtersedia: dashC
+                                                    .dataPopular[index]
+                                                    .jumlahMagang,
+                                                dataMagang: responseMagang,
+                                              ),
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor: ColorHelpers
@@ -196,93 +232,21 @@ class DashboardScrenn extends StatelessWidget {
                               ],
                             ),
                           ),
-                        )
-                      : Card(
-                          elevation: 0,
-                          color: Theme.of(context).colorScheme.surfaceVariant,
-                          child: Container(
-                            width: 230,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomRight,
-                                  colors: const [
-                                    ColorHelpers.colorNavbarProfile,
-                                    ColorHelpers.colorNavbarProfile1
-                                  ]),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 0.5,
-                                    offset: Offset(9, 9),
-                                    color: Color(0xff1E1E1E).withOpacity(.2),
-                                    spreadRadius: -4),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                    "Politeknik Negeri Jember",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    CachedNetworkImage(
-                                      height: 70,
-                                      imageUrl: "https://picsum.photos/200",
-                                      progressIndicatorBuilder: (context, url,
-                                              downloadProgress) =>
-                                          CircularProgressIndicator(
-                                              value: downloadProgress.progress),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 60),
-                                      child: SizedBox(
-                                        height: 30,
-                                        width: 80,
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: ColorHelpers
-                                                  .backgroundBlueNew),
-                                          child: Text("Detail"),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
                         );
-                },
-
-                itemCount: 100,
-                options: CarouselOptions(
-                  autoPlay: true,
-                  viewportFraction: 0.6,
-                  aspectRatio: 2.0,
-                  initialPage: 0,
-                  enlargeCenterPage: true,
-                ),
-              ),
+                      },
+                      itemCount: dashC.dataPopular.length,
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        viewportFraction: 0.6,
+                        aspectRatio: 2.0,
+                        initialPage: 0,
+                        enlargeCenterPage: true,
+                        reverse: false,
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
           ),
           Divider(
@@ -291,7 +255,7 @@ class DashboardScrenn extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 15),
             child: Text(
-              "Popular Categories",
+              "Cari Berdasarkan Kategori",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -308,36 +272,43 @@ class DashboardScrenn extends StatelessWidget {
               child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: const [
-                        SizedBox(
-                          height: 70,
-                          width: 70,
-                          child: Image(
-                            image: AssetImage("assets/images/komputer.png"),
+                    return InkWell(
+                      onTap: () {
+                        Get.to(() => MagangByKategori(
+                            kategori: dashC.kategory[index].kategori,
+                            kategoriId: dashC.kategory[index].id));
+                      },
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 70,
+                            width: 70,
+                            child: Image(
+                              image: AssetImage("assets/images/komputer.png"),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Komputer",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w500),
-                        )
-                      ],
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            dashC.kategory[index].kategori.toString(),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
                     );
                   },
                   separatorBuilder: (context, index) => SizedBox(
                         width: 20,
                       ),
-                  itemCount: 20),
+                  itemCount: dashC.kategory.length),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
-              "Magang yang sesuai dengan mu",
+              "Daftar Magang Berbagai Perusahaan",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,

@@ -1,16 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/model/magang_penyedia.dart';
 import 'package:go_intern/APP/model/magang_response.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/lamar.dart';
 
 // ignore: must_be_immutable
-class DetailMagang extends StatelessWidget {
-  DetailMagang({required this.magangMain, required this.index});
+class DetailMagangPopular extends StatelessWidget {
+  DetailMagangPopular({required this.magangMain, required this.index});
 
-  MagangMain? magangMain;
+  MagangPenyedia? magangMain;
   int index;
   @override
   Widget build(BuildContext context) {
@@ -93,7 +94,7 @@ class DetailMagang extends StatelessWidget {
                               ),
                               Text(
                                 softWrap: false,
-                                magangMain!.body[index].alamatPerusahaan,
+                                magangMain!.body[index].alamat,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 20,
@@ -213,7 +214,7 @@ class DetailMagang extends StatelessWidget {
                             )),
                         Expanded(
                           child: Text(
-                            magangMain!.body[index].alamatPerusahaan,
+                            magangMain!.body[index].alamat,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                             overflow: TextOverflow.ellipsis,

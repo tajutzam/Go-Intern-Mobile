@@ -35,7 +35,8 @@ class LoginController extends GetxController {
   var filenamePenghargaan = "".obs;
   TextEditingController judulC = TextEditingController();
   var idPenghargaanVal = 0.obs;
-
+  final deskripsiC = TextEditingController();
+  final userCon = Get.put(UserController());
   refreshSkill() {
     dataList[2] = "skill";
   }
@@ -62,21 +63,21 @@ class LoginController extends GetxController {
     if (respons.statusCode == 404) {
       Get.snackbar('Gagal Login', data['body'][0],
           colorText: Colors.white,
-          backgroundColor: ColorHelpers.colorNavbarProfile);
+          backgroundColor: ColorHelpers.colorSnackbarfailed);
     } else if (respons.statusCode == 401) {
       Get.snackbar('Gagal login', data['body'][0]['message'],
           colorText: Colors.white,
-          backgroundColor: ColorHelpers.colorNavbarProfile);
+          backgroundColor: ColorHelpers.colorSnackbarfailed);
     } else if (respons.statusCode == 400) {
       Get.snackbar('Gagal login', data['message'],
           colorText: ColorHelpers.colorBlackText,
-          backgroundColor: ColorHelpers.colorNavbarProfile);
+          backgroundColor: ColorHelpers.colorSnackbarfailed);
     } else {
       var dashC = Get.put(DashboardController());
       // dashC.checkFoto();
       Get.snackbar("Succes", "Berhasil Login",
-          colorText: Color.fromRGBO(39, 39, 39, 1),
-          backgroundColor: Colors.green[100]);
+          colorText: Colors.white,
+          backgroundColor: ColorHelpers.colorSnackbar);
       LoginResponse dataPencariMagang = LoginResponse.fromJson(data);
       var tentangSaya = dataPencariMagang.body[0][0].tentangSaya;
 
@@ -104,25 +105,45 @@ class LoginController extends GetxController {
       sharedPreferences.setInt(
           'penghargaan', dataPencariMagang.body[0][0].idPenghargaan);
       print(sharedPreferences.getString('jenis_kelamin'));
+      sharedPreferences.setString('passwordData', passC.text);
       dashC.checkFoto();
       Get.off(HomePageScrenn.new);
     }
   }
 
+  logout() {
+    //clear data list , to remove update option
+    dataList[0] = "";
+    dataList[1] = "";
+    dataList[2] = "";
+    dataList[3] = "";
+  }
+
   showDatajurusan() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
     var id = sharedPreferences.getInt('id');
     var response = await userService.showDataSekolah(id);
     Map<String, dynamic> decoded = jsonDecode(response.body);
-    decoded.forEach((key, value) {
-      datajurusanTemp.add(value);
-    });
+    decoded.forEach(
+      (key, value) {
+        datajurusanTemp.add(value);
+      },
+    );
     if (response.statusCode == 200) {
       var dataResponse = jsonDecode(response.body);
       dataList[1] = dataResponse['body'][0]['jurusan'];
       dataSekolahUser.addAll(dataResponse);
+      if (dataResponse['body'][0]['deskripsi'] != null) {
+        deskripsiC.text = dataResponse['body'][0]['deskripsi'];
+      } else {
+        print('null');
+      }
     }
+  }
+
+  updateDeskripsiSekolah() async {
+    var response = await userService.updateDeskripsiSekolah(deskripsiC.text);
+    print(response.body);
   }
 
   succesLogin() async {
@@ -130,6 +151,7 @@ class LoginController extends GetxController {
     showDatajurusan();
     nama.value = sharedPreferences.getString('nama')!;
     getDatPenghargaan();
+    userCon.showSekolahUser();
   }
 
   showPenghargaanByPencariMagang() async {
@@ -189,5 +211,6 @@ class LoginController extends GetxController {
   void dispose() {
     usC.clear();
     passC.clear();
+    deskripsiC.clear();
   }
 }

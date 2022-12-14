@@ -1,20 +1,13 @@
-import 'dart:convert';
-
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// ignore: implementation_imports
 import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
-import 'package:go_intern/APP/model/sekolah_response.dart';
 import 'package:go_intern/helpers/color.dart';
-import 'package:go_intern/helpers/url.dart';
-import 'package:intl/intl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class Pendidikan extends StatelessWidget {
@@ -75,10 +68,9 @@ class Pendidikan extends StatelessWidget {
                             color: ColorHelpers.fieldColor,
                           ),
                           child: DropdownSearch<String>(
-                            selectedItem: losC.dataSekolahUser.isEmpty
+                            selectedItem: userC.sekolahTemp.isEmpty
                                 ? ""
-                                : losC.dataSekolahUser['body'][0]
-                                    ['nama_sekolah'],
+                                : userC.sekolahTemp.value,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "harap pilih data sekolah terlebih dahulu";
@@ -151,66 +143,6 @@ class Pendidikan extends StatelessWidget {
                                                   SizedBox(
                                                     height: 10,
                                                   ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'Jurusan',
-                                                        style: TextStyle(
-                                                          color: ColorHelpers
-                                                              .colorBlackText,
-                                                          fontSize: 17,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      DropdownSearch<String>(
-                                                        dropdownDecoratorProps:
-                                                            DropDownDecoratorProps(
-                                                                dropdownSearchDecoration:
-                                                                    InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                        labelText:
-                                                                            'Cari data jurusan')),
-                                                        popupProps:
-                                                            PopupProps.menu(
-                                                                showSelectedItems:
-                                                                    true,
-                                                                showSearchBox:
-                                                                    true),
-                                                        items:
-                                                            userC.datajurusan,
-                                                        onChanged: (value) {
-                                                          userC.jurusanTemp
-                                                              .value = value!;
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  TextField(
-                                                    minLines: 6,
-                                                    maxLines: null,
-                                                    keyboardType:
-                                                        TextInputType.multiline,
-                                                    decoration: InputDecoration(
-                                                        labelText: 'Deskripsi',
-                                                        hintText:
-                                                            'Deskripsi singkat saat kamu sekolah',
-                                                        // fillColor:
-                                                        //     ColorHelpers.fieldColor,
-                                                        // filled: true,
-                                                        border:
-                                                            OutlineInputBorder()),
-                                                  ),
                                                   ElevatedButton(
                                                       style: ElevatedButton
                                                           .styleFrom(
@@ -229,6 +161,8 @@ class Pendidikan extends StatelessWidget {
                                                                 userC
                                                                     .jurusanTemp
                                                                     .value);
+                                                        Get.snackbar('success',
+                                                            'Succes memambahkan sekolah ,  silahkan pilih sekolah mu' , backgroundColor: ColorHelpers.colorSnackbar , colorText: Colors.white);
                                                         Navigator.pop(context);
                                                       },
                                                       child: Text(
@@ -241,19 +175,22 @@ class Pendidikan extends StatelessWidget {
                                       );
                                     },
                                     child: Text(
-                                        'Sekolah tidak ada,tambahkan sekarang'),
+                                        'Sekolah tidak tersedia,tambahkan sekarang'),
                                   ),
                                 );
                               },
                             ),
                             items: userC.dataSekolah,
                             onSaved: (newValue) {
+                              print(newValue);
                               userC.sekolahTemp.value = newValue!;
                             },
+
                             dropdownDecoratorProps: DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(),
                             ),
                             onChanged: (value) {
+                              print(value);
                               userC.sekolahTemp.value = value!;
                             },
                             // selectedItem: "Brazil",
@@ -272,9 +209,16 @@ class Pendidikan extends StatelessWidget {
                             color: ColorHelpers.fieldColor,
                           ),
                           child: DropdownSearch<String>(
-                            selectedItem: losC.dataSekolahUser.isEmpty
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Harap pilih data jurusan terlebih dahulu";
+                              } else {
+                                return null;
+                              }
+                            },
+                            selectedItem: userC.jurusanTemp.isEmpty
                                 ? ""
-                                : losC.dataSekolahUser['body'][0]['jurusan'],
+                                : userC.jurusanTemp.value,
                             popupProps: PopupProps.menu(
                               isFilterOnline: true,
                               showSelectedItems: false,
@@ -303,11 +247,19 @@ class Pendidikan extends StatelessWidget {
                           height: 10,
                         ),
                         Text(
-                          "Deskripsi Selama Sekolah",
+                          "Deskripsi Singkat Selama Sekolah",
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w500),
                         ),
-                        TextField(
+                        TextFormField(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Deskripsi sekolah tidak boleh null";
+                            } else {
+                              return null;
+                            }
+                          },
+                          controller: losC.deskripsiC,
                           minLines: 6,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
@@ -336,21 +288,32 @@ class Pendidikan extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: ColorHelpers.backgroundBlueNew),
                     onPressed: () async {
-                      userC.addSekolahToJurusan(
-                          userC.sekolahTemp.value, userC.jurusanTemp.value);
-                      SharedPreferences sharedPreferences =
-                          await SharedPreferences.getInstance();
-                      var id = sharedPreferences.getInt('id');
-                      var responseBool = await userC.addDataSekolah(
-                          userC.sekolahTemp.value, userC.jurusanTemp.value, id);
-                      //interact ever callback
-                      losC.interactPendidikan.value++;
-                      print(losC.interactPendidikan);
-                      print(responseBool);
-                      if (responseBool) {
-                        Get.snackbar(
-                            'success', 'berhasil menambahkan data sekolah');
-                        Navigator.pop(context);
+                      if (_form.currentState!.validate()) {
+                        userC.addSekolahToJurusan(
+                            userC.sekolahTemp.value, userC.jurusanTemp.value);
+                        SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        var id = sharedPreferences.getInt('id');
+                        var responseBool = await userC.addDataSekolah(
+                            userC.sekolahTemp.value,
+                            userC.jurusanTemp.value,
+                            id);
+                        losC.updateDeskripsiSekolah();
+                        losC.interactPendidikan.value++;
+
+                        if (responseBool) {
+                          Get.snackbar(
+                              'success', 'berhasil menambahkan data sekolah',
+                              backgroundColor: ColorHelpers.colorSnackbar,
+                              colorText: Colors.white);
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        }else{
+                          Get.snackbar(
+                              'failed', 'Gagal menambahkan data sekolah',
+                              backgroundColor: ColorHelpers.colorSnackbarfailed,
+                              colorText: Colors.white);
+                        }
                       }
                     },
                     child: Text(
@@ -370,9 +333,7 @@ class Pendidikan extends StatelessWidget {
     );
   }
 
-  @override
   Ticker createTicker(TickerCallback onTick) {
-    // TODO: implement createTicker
     throw UnimplementedError();
   }
 }

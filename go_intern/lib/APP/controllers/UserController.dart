@@ -31,12 +31,14 @@ class UserController extends GetxController
   List<String> dataSekolah = [];
   List<String> datajurusan = [];
   TextEditingController judulPenghargaan = TextEditingController();
-  var pathPenghargaan = "".obs;
 
+  var pathPenghargaan = "".obs;
+  var pathCv = "".obs;
   var interactUser = false.obs;
   var jurusanTemp = "".obs;
   final ttgSayaC = TextEditingController();
   var sekolahTemp = "".obs;
+
   List data = [
     "",
     "",
@@ -94,6 +96,7 @@ class UserController extends GetxController
 
   uploadImage(filename, path) async {
     var res = await userService.uploadImage(filename, path);
+    return res;
   }
 
   getDataUser(username) async {
@@ -123,6 +126,42 @@ class UserController extends GetxController
     print(response.body);
   }
 
+  // showDatajurusan() async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   var id = sharedPreferences.getInt('id');
+  //   var response = await userService.showDataSekolah(id);
+  //   Map<String, dynamic> decoded = jsonDecode(response.body);
+  //   decoded.forEach(
+  //     (key, value) {
+  //       datajurusanTemp.add(value);
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     var dataResponse = jsonDecode(response.body);
+  //     dataList[1] = dataResponse['body'][0]['jurusan'];
+  //     dataSekolahUser.addAll(dataResponse);
+  //     if (dataResponse['body'][0]['deskripsi'] != null) {
+  //       deskripsiC.text = dataResponse['body'][0]['deskripsi'];
+  //     } else {
+  //       print('null');
+  //     }
+  //   }
+  // }
+  showSekolahUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    var response = await userService.showDataSekolah(id);
+    Map<String, dynamic> resposedecoded = jsonDecode(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      sekolahTemp.value = resposedecoded['body'][0]['nama_sekolah'];
+      jurusanTemp.value = resposedecoded['body'][0]['jurusan'];
+    } else {
+      print(response.body);
+      print('data tidak ada');
+    }
+  }
+
   addDataSekolah(sekolah, jurusan, id) async {
     var responseSekolah = await sekolahService.cariSekolah(sekolah);
     var responseJurusan = await jurusanService.findByJurusan(jurusan);
@@ -143,7 +182,25 @@ class UserController extends GetxController
     return await userService.updatePenghargaan(filename, judul, username);
   }
 
+  addCv() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    print(pathCv.value);
+    await userService.updateCv(filename: pathCv.value);
+    var responseId = await userService.findById(id);
+    pathCv.value = responseId.body[0].cv;
+  }
 
+  fetchDataCv() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    print(id);
+    var responseUser = await userService.findById(id);
+    if (responseUser.body[0].cv != "") {
+      pathCv.value = responseUser.body[0].cv;
+    }
+    print("path cv ${pathCv.value}");
+  }
 
   @override
   void onInit() async {
@@ -165,7 +222,11 @@ class UserController extends GetxController
 
   @override
   void dispose() {
+    // ignore: todo
     // TODO: implement dispose
     judulPenghargaan.text = "";
+    sekolahTemp.value = "";
+    jurusanTemp.value = "";
+    print('dispose');
   }
 }

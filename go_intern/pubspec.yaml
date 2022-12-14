@@ -32,6 +32,7 @@ dependencies:
   cached_network_image: ^3.2.2
   carousel_slider: ^4.1.1
   cupertino_icons: ^1.0.2
+  dotted_border: ^2.0.0+3
   dropdown_button2: ^1.8.5
   dropdown_search: ^5.0.3
   dropdown_textfield: ^1.0.7
@@ -40,6 +41,8 @@ dependencies:
     sdk: flutter
   flutter_cached_pdfview: ^0.4.1
   flutter_launcher_icons: ^0.10.0
+  geocoding: ^2.0.5
+  geolocator: ^9.0.2
   get: ^4.6.5
   get_storage: ^2.0.3
   http: ^0.13.5

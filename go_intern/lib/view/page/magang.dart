@@ -4,6 +4,7 @@ import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard_content/magang_terbaru.dart';
 import 'package:go_intern/view/page/dashboard_content/magang_untukmu.dart';
 
+// ignore: must_be_immutable
 class Magang extends StatelessWidget {
   var c = Get.put(ControllerTabbar());
   @override
@@ -53,7 +54,6 @@ class Magang extends StatelessWidget {
     );
   }
 }
-
 class ControllerTabbar extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;
