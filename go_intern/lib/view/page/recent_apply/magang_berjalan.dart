@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_intern/helpers/color.dart';
 
-class MagangTerbaru extends StatelessWidget {
-  const MagangTerbaru({super.key});
-
+class MagangBerlangsung extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      separatorBuilder: (context, index) => Divider(
-        color: ColorHelpers.backgroundOfIntroduction,
-      ),
-      itemCount: 10,
+      separatorBuilder: (context, index) =>
+          Divider(color: ColorHelpers.backgroundOfIntroduction),
+      itemCount: 3,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -26,9 +23,15 @@ class MagangTerbaru extends StatelessWidget {
                 ),
               ]),
           child: ListTile(
-            title: Text("oke"),
+            contentPadding: EdgeInsets.all(10.0),
             leading: FlutterLogo(),
-            subtitle: Text("halo"),
+            title: Text("Product designer",
+                style: TextStyle(
+                    fontFamily: 'UbuntuCondensed',
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold)),
+            subtitle: Text("magang product designer",
+                style: TextStyle(fontFamily: 'UbuntuCondensed', fontSize: 10)),
             trailing: SizedBox(
               height: 30,
               width: 140,
