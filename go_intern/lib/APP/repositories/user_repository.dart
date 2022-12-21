@@ -207,4 +207,18 @@ class UserRepository {
     var response = await http.post(Uri.parse(url), body: jsonEncode(data));
     print(response.body);
   }
+
+  Future<http.Response> showMagangActive({required id}) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/showmagangactive";
+    var body = {"id": id};
+    var response = await http.post(Uri.parse(url), body: jsonEncode(body));
+    return response;
+  }
+
+  Future<http.Response> showRiwayatLamaran({required id}) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/riwayatlamaran";
+    var data = {"id": id};
+    var response = await http.post(Uri.parse(url), body: json.encode(data));
+    return response;
+  }
 }

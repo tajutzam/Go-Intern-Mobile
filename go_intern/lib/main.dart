@@ -16,22 +16,42 @@ import 'package:go_intern/view/page/profile/personal.dart';
 import 'package:go_intern/view/page/profile/profile.dart';
 import 'package:go_intern/view/page/profile/skill.dart';
 import 'package:go_intern/view/page/profile/tentang_saya.dart';
-import 'package:go_intern/view/page/recent_apply/recent_applay.dart';
+import 'package:go_intern/view/page/recent_apply.dart';
+
 import 'package:go_intern/view/page/register.dart';
 import 'package:go_intern/view/splash/splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main(List<String> args) async {
   await GetStorage.init();
   runApp(GoInternApp());
 }
+
 // ignore: must_be_immutable
 class GoInternApp extends StatelessWidget {
   GoInternApp({super.key});
   var logC = Get.put(LoginController());
-  var userC = Get.put(UserController());
   var locationC = Get.put(LocationController());
+
   @override
   Widget build(BuildContext context) {
+    checkLogin() async {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      var isLogin = sharedPreferences.getBool('login');
+      print(isLogin);
+      if (isLogin != null) {
+        if (isLogin) {
+          print("is login true");
+          Get.off(HomePageScrenn.new);
+        } else {
+          print("is login false");
+        }
+      } else {
+        print("is login null");
+      }
+    }
+
     return GetMaterialApp(
       theme: ThemeData(fontFamily: "unchen"),
       debugShowCheckedModeBanner: false,
@@ -61,13 +81,13 @@ class GoInternApp extends StatelessWidget {
         GetPage(name: "/profile", page: ProfilePage.new),
         GetPage(name: "/personal", page: PersonalScrenn.new),
         GetPage(name: "/keamanan", page: KemananScrenn.new),
-        GetPage(name: "/recent", page: RecentApplyPage.new)
+        GetPage(name: "/recent", page: recent_apply.new)
       ],
       home: FutureBuilder(
-        future: Future.delayed(const Duration(seconds: 3)),
-        builder: (context, snapshot) {
+        future: Future.delayed(Duration(seconds: 3)),
+        builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SplashScreen();
+            return SplashScreen();
           } else {
             return const IntroDuctionPage();
           }

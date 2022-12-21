@@ -362,7 +362,7 @@ class LamarMagangScrenn extends StatelessWidget {
                             lowonganC.noHp.value =
                                 int.parse(lowonganC.noHpC.text);
                             if (response) {
-                              Get.offNamed('/recent');
+                              Get.offNamed('/home');
                             } else {
                               print('gagal upload');
                             }

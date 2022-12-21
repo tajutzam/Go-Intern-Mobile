@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/APP/controllers/personalcontroller.dart';
+import 'package:go_intern/APP/controllers/recent_controller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard.dart';
 import 'package:go_intern/view/page/magang.dart';
@@ -14,7 +15,7 @@ import 'package:go_intern/view/page/recent_apply.dart';
 class HomePageScrenn extends StatelessWidget {
   var controller = Get.put(ControllerBottom());
   var personalC = Get.put(PersonalController());
-  var userC = Get.find<UserController>();
+  var userC = Get.put(UserController());
   List apbar = [
     PreferredSize(
         preferredSize: Size.fromHeight(100),
@@ -61,7 +62,7 @@ class HomePageScrenn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     personalC.fetchdataUser();
-    userC.fetchDataCv();
+    // userC.fetchDataCv();
     return Scaffold(
       // appBar: PreferredSize(
       //   child: Obx(() => IndexedStack(
@@ -92,9 +93,11 @@ class HomePageScrenn extends StatelessWidget {
 
 class ControllerBottom extends GetxController {
   var tabIndex = 0.obs;
-
+  var recentC = Get.put(RecentController());
   void changeTabIndex(int index) {
     tabIndex.value = index;
+    print(index);
+    recentC.refreshdata();
   }
 
   @override

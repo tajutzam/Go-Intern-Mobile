@@ -6,6 +6,7 @@ import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/jurusan_response.dart';
 import 'package:go_intern/APP/model/login_response.dart';
 import 'package:go_intern/APP/model/sekolah_response.dart';
+import 'package:go_intern/APP/model/showMagang_response.dart';
 import 'package:go_intern/APP/repositories/user_repository.dart';
 import 'package:go_intern/APP/services/jurusan_service.dart';
 import 'package:go_intern/APP/services/sekolah_service.dart';
@@ -31,7 +32,7 @@ class UserController extends GetxController
   List<String> dataSekolah = [];
   List<String> datajurusan = [];
   TextEditingController judulPenghargaan = TextEditingController();
-
+  List<BodyMagangActive> magangActive = [];
   var pathPenghargaan = "".obs;
   var pathCv = "".obs;
   var interactUser = false.obs;
@@ -205,9 +206,10 @@ class UserController extends GetxController
   @override
   void onInit() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    getDataLogin();
-    setDataSekolah();
-    setDataJurusan();
+    await getDataLogin();
+    await setDataSekolah();
+    await setDataJurusan();
+    await fetchDataCv();
     print('on init run');
     animationController = AnimationController(vsync: this);
     animationController.fling();

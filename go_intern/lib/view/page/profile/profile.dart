@@ -500,10 +500,12 @@ class ProfilePage extends StatelessWidget {
                           SharedPreferences sharedPreferences =
                               await SharedPreferences.getInstance();
                           var isClear = await sharedPreferences.clear();
-                          sharedPreferences.remove('nama');
                           // ignore: invalid_use_of_protected_member
                           if (isClear) {
                             usC.pathCv.value = "";
+                            usC.pathPenghargaan.value = "";
+                            logC.interactPenghargaan.value = 0;
+                            sharedPreferences.remove('penghargaan');
                             logC.logout();
                             logC.dispose();
                             usC.dispose();

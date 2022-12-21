@@ -36,7 +36,7 @@ class LoginController extends GetxController {
   TextEditingController judulC = TextEditingController();
   var idPenghargaanVal = 0.obs;
   final deskripsiC = TextEditingController();
-  final userCon = Get.put(UserController());
+
   refreshSkill() {
     dataList[2] = "skill";
   }
@@ -76,8 +76,7 @@ class LoginController extends GetxController {
       var dashC = Get.put(DashboardController());
       // dashC.checkFoto();
       Get.snackbar("Succes", "Berhasil Login",
-          colorText: Colors.white,
-          backgroundColor: ColorHelpers.colorSnackbar);
+          colorText: Colors.white, backgroundColor: ColorHelpers.colorSnackbar);
       LoginResponse dataPencariMagang = LoginResponse.fromJson(data);
       var tentangSaya = dataPencariMagang.body[0][0].tentangSaya;
 
@@ -117,6 +116,7 @@ class LoginController extends GetxController {
     dataList[1] = "";
     dataList[2] = "";
     dataList[3] = "";
+    judulC.clear();
   }
 
   showDatajurusan() async {
@@ -150,7 +150,9 @@ class LoginController extends GetxController {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     showDatajurusan();
     nama.value = sharedPreferences.getString('nama')!;
+    sharedPreferences.setBool('login', true);
     getDatPenghargaan();
+    final userCon = Get.put(UserController());
     userCon.showSekolahUser();
   }
 
@@ -178,7 +180,11 @@ class LoginController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    print('login');
+    print(sharedPreferences.getInt('id'));
+
     super.onInit();
     sekolahService.getAllData();
     ever(

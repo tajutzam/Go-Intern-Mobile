@@ -15,45 +15,71 @@ class Magang extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        title: SizedBox(
-          height: 50,
-          child: TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              filled: true,
-              fillColor: ColorHelpers.fieldColor,
-              labelText: "Cari Kriteria Magang . .",
-              labelStyle:
-                  TextStyle(fontFamily: "Times", fontWeight: FontWeight.w600),
-              suffixIcon: Icon(Icons.search),
+        title: Column(
+          children: const [
+            SizedBox(
+              height: 50,
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: ColorHelpers.fieldColor,
+                  labelText: "Cari Kriteria Magang . .",
+                  labelStyle: TextStyle(
+                      fontFamily: "Times", fontWeight: FontWeight.w600),
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
             ),
-          ),
-        ),
-        bottom: TabBar(
-          labelColor: Colors.black,
-          indicatorColor: ColorHelpers.backgroundBlueNew,
-          indicator: UnderlineTabIndicator(
-              borderSide:
-                  BorderSide(color: ColorHelpers.backgroundBlueNew, width: 3)),
-          controller: c.tabController,
-          tabs: const [
-            Tab(
-              child: Text("Magang Untukmu",
-                  style: TextStyle(fontSize: 15, fontFamily: "Times")),
-            ),
-            Tab(
-              child: Text("Magang Terbaru",
-                  style: TextStyle(fontSize: 15, fontFamily: "Times")),
-            )
           ],
         ),
+        // bottom: TabBar(
+        //   labelColor: Colors.black,
+        //   indicatorColor: ColorHelpers.backgroundBlueNew,
+        //   indicator: UnderlineTabIndicator(
+        //       borderSide:
+        //           BorderSide(color: ColorHelpers.backgroundBlueNew, width: 3)),
+        //   controller: c.tabController,
+        //   tabs: const [
+        //     Tab(
+        //       child: Text("Magang Untukmu",
+        //           style: TextStyle(fontSize: 15, fontFamily: "Times")),
+        //     ),
+        //     Tab(
+        //       child: Text("Magang Terbaru",
+        //           style: TextStyle(fontSize: 15, fontFamily: "Times")),
+        //     )
+        //   ],
+        // ),
       ),
-      body: TabBarView(
-          controller: c.tabController,
-          children: [MagangUntukmu(), MagangTerbaru()]),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "DATA MAGANG YANG TERSEDIA",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'poppins',
+                  color: ColorHelpers.colorBlackText),
+            ),
+          ),
+          Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(
+              color: ColorHelpers.colorBlackText,
+              indent: 2,
+            ),
+          ),
+          Expanded(child: MagangUntukmu()),
+        ],
+      ),
     );
   }
 }
+
 class ControllerTabbar extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;

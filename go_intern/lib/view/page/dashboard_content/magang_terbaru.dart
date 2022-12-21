@@ -6,6 +6,9 @@ class MagangTerbaru extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    
     return ListView.separated(
       separatorBuilder: (context, index) => Divider(
         color: ColorHelpers.backgroundOfIntroduction,

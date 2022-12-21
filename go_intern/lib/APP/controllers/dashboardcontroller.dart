@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
-import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/kategori_response.dart';
-import 'package:go_intern/APP/model/login_response.dart';
+import 'package:go_intern/APP/model/magang_limit_response.dart';
 import 'package:go_intern/APP/model/penyedia_response.dart';
 import 'package:go_intern/APP/services/kategori_service.dart';
+import 'package:go_intern/APP/services/magang_service.dart';
 import 'package:go_intern/APP/services/penyedia_service.dart';
 import 'package:go_intern/APP/services/user_service.dart';
 import 'package:go_intern/helpers/color.dart';
@@ -17,6 +17,7 @@ import '../model/magang_penyedia.dart';
 class DashboardController extends GetxController {
   var controller = TextEditingController();
   var foto = "woman.png".obs;
+  MagangService magangService = MagangService();
   var username = "".obs;
 
   var interactChange = 0.obs;
@@ -29,13 +30,11 @@ class DashboardController extends GetxController {
   List<KategoriBody> kategory = [];
   KategoriService kategoriService = KategoriService();
 
-  getKategori() async {
+  List<MagangLimitBody> dataMagangLimit = [];
+
+  Future<Kategori> getKategori() async {
     var response = await kategoriService.findAll();
-    if (response != null) {
-      response.body.forEach((element) {
-        kategory.add(element);
-      });
-    }
+    return response;
   }
 
   getDataUser(ys, filename, path) async {
@@ -90,8 +89,14 @@ class DashboardController extends GetxController {
     }
   }
 
+  Future<MagangLimit1> getMagangLimit() async {
+    MagangLimit1 data = await magangService.showMagangLimit();
+    return data;
+  }
+
   @override
   void onInit() async {
+    getMagangLimit();
     getKategori();
     getPopularPenyedia();
     print('run on init , dash');

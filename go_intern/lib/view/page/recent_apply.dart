@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
+import 'package:go_intern/APP/controllers/recent_controller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/recent_apply/magang_berjalan.dart';
 import 'package:go_intern/view/page/recent_apply/magang_lampau.dart';
 
+// ignore: camel_case_types
 class recent_apply extends StatelessWidget {
   var cY = Get.put(ControllerTabbarrecent());
   @override
   Widget build(BuildContext context) {
+    Get.put(RecentController());
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: ColorHelpers.backgroundBlueNew,
@@ -32,7 +36,7 @@ class recent_apply extends StatelessWidget {
                       fontSize: 15, fontFamily: "Times", color: Colors.white)),
             ),
             Tab(
-              child: Text("Magang Terdahulu",
+              child: Text("Riwayat Lamaran",
                   style: TextStyle(
                       fontSize: 15, fontFamily: "Times", color: Colors.white)),
             )
@@ -41,7 +45,7 @@ class recent_apply extends StatelessWidget {
       ),
       body: TabBarView(
           controller: cY.tabController,
-          children: [MagangBerlangsung(), MagangLampau()]),
+          children: [MagangBerlangsung(), RiwayatLamran()]),
     );
   }
 }

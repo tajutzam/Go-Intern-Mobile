@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/model/kategori_response.dart';
 import 'package:go_intern/APP/model/magang_response.dart';
+import 'package:go_intern/APP/model/magangbykategori_response.dart';
 import 'package:go_intern/APP/model/pagination.dart';
+import 'package:go_intern/APP/services/magang_service.dart';
 import 'package:go_intern/helpers/url.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
@@ -12,6 +15,8 @@ import 'package:path_provider/path_provider.dart';
 
 class MagangController extends GetxController {
   Timer? timer;
+
+  List<MagangKategoriBody> dataMagangKategori = [];
 
   MagangMain? magangMain;
   var isDataLoading = true.obs;
@@ -29,34 +34,26 @@ class MagangController extends GetxController {
   // int get limit => _paginationFilter.value.limit;
   // int get _page => _paginationFilter.value.page;
   bool get lastPage => _lastPage.value;
+  MagangService magangService = MagangService();
 
-  getData() async {
-    print('get data launch');
-    final url = "${UrlHelper.baseUrl}/magang/showmagangall";
-    print("get data");
-    try {
-      isDataLoading(true);
-      var response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        magangMain = MagangMain.fromJson(jsonDecode(response.body));
-        magangMain!.body;
-        hasmore.value = false;
-        isDataLoading.value = false;
-        isNull = false;
-      } else {
-        isNull = true;
-      }
-    } catch (e) {
-      print('Error while getting data is $e');
-    } finally {
-      isDataLoading.value = false;
+  Future<MagangMain> getData() async {
+    var response = await magangService.getDataMagang();
+    return response;
+  }
+
+  showMagangKategori(ktg) async {
+    var responseBoll = await magangService.showMagangByKategori(kategori: ktg);
+    if (responseBoll != null) {
+      return responseBoll.body;
+    } else {
+      return null;
     }
   }
-    @override
+
+  @override
   void onInit() async {
     super.onInit();
     await getData();
-    magangMain!.body.shuffle();
     // every 20 seconds refresh page
     timer = Timer.periodic(Duration(seconds: 20), (Timer t) {
       refreshAuto.value = t.tick;

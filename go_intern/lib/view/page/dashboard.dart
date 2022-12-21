@@ -2,12 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/MagangController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
 import 'package:go_intern/APP/controllers/location_controller.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/APP/controllers/personalcontroller.dart';
+import 'package:go_intern/APP/model/magang_limit_response.dart';
+import 'package:go_intern/APP/model/magang_response.dart';
+import 'package:go_intern/APP/model/magangbykategori_response.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
+import 'package:go_intern/view/page/detail_magang_limit.dart';
 import 'package:go_intern/view/page/detail_penyedia.dart';
 import 'package:go_intern/view/page/magang_kategori.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +24,7 @@ class DashboardScrenn extends StatelessWidget {
   var loginC = Get.put(LoginController());
   var locationControler = Get.put(LocationController());
   var personalC = Get.put(PersonalController());
+  var magangC = Get.put(MagangController());
   @override
   Widget build(BuildContext context) {
     // String username = data[0]['username'];
@@ -268,42 +274,67 @@ class DashboardScrenn extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 15),
             child: SizedBox(
-              height: 150,
-              child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.to(() => MagangByKategori(
-                            kategori: dashC.kategory[index].kategori,
-                            kategoriId: dashC.kategory[index].id));
-                      },
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 70,
-                            child: Image(
-                              image: AssetImage("assets/images/komputer.png"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            dashC.kategory[index].kategori.toString(),
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                    );
+                height: 150,
+                child: FutureBuilder(
+                  future: dashC.getKategori(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData) {
+                        return ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () async {
+                                  List<MagangKategoriBody> dataToSend = [];
+                                  var data = await magangC.showMagangKategori(
+                                      snapshot.data!.body[index].id);
+                                  if (data != null) {
+                                    dataToSend = data;
+                                  } else {}
+                                  Get.to(() => MagangByKategori(
+                                      dataMagang: dataToSend,
+                                      kategori: snapshot.data!.body[index].kategori,
+                                      kategoriId: snapshot.data!.body[index].id));
+                                },
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 70,
+                                      width: 70,
+                                      child: Image(
+                                        image: AssetImage(
+                                            "assets/images/komputer.png"),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      snapshot.data!.body[index].kategori.toString(),
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) => SizedBox(
+                                  width: 20,
+                                ),
+                            itemCount: snapshot.data!.body.length);
+                      } else {
+                        return Center(
+                          child: Text("Tidak ada data kategori"),
+                        );
+                      }
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                   },
-                  separatorBuilder: (context, index) => SizedBox(
-                        width: 20,
-                      ),
-                  itemCount: dashC.kategory.length),
-            ),
+                )),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -319,105 +350,146 @@ class DashboardScrenn extends StatelessWidget {
             height: 10,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              separatorBuilder: (context, index) => SizedBox(
-                height: 40,
-              ),
-              itemCount: 10, // ambil api
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 0,
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  child: Container(
-                    width: 230,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 0.5,
-                            offset: Offset(6, 6),
-                            color: Color(0xff1E1E1E).withOpacity(.2),
-                            spreadRadius: -4),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CachedNetworkImage(
-                            imageUrl: "https://picsum.photos/200",
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: FutureBuilder<MagangLimit1>(
+                future: dashC.getMagangLimit(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      return ListView.separated(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 40,
                         ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Frontend Engginer',
-                                style: TextStyle(
-                                    fontFamily: 'poppins',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600),
+                        itemCount: snapshot.data!.body.length, // ambil api
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 0,
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            child: Container(
+                              width: 230,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 0.5,
+                                      offset: Offset(6, 6),
+                                      color: Color(0xff1E1E1E).withOpacity(.2),
+                                      spreadRadius: -4),
+                                ],
                               ),
-                              Expanded(
-                                  child: Text(
-                                'membutuhkan , intern untuk menangani pada bagian front end menggunakan react',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: 'poppins',
-                                    fontWeight: FontWeight.w500),
-                              )),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        'Politeknik Negeri Jember',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CachedNetworkImage(
+                                        width: 150,
+                                        imageUrl:
+                                            UrlHelper.baseUrlImagePenyedia +
+                                                snapshot.data!.body[index].foto,
+                                        progressIndicatorBuilder: (context, url,
+                                                downloadProgress) =>
+                                            CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
                                       ),
                                     ),
-                                    IconButton(
-                                        onPressed: () {
-                                          print('clicked');
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward,
-                                          size: 35,
-                                          color: ColorHelpers.colorBlackText,
-                                        ))
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            snapshot.data!.body[index].posisi,
+                                            style: TextStyle(
+                                                fontFamily: 'poppins',
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Expanded(
+                                              child: Text(
+                                            snapshot
+                                                .data!.body[index].deskripsi,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3,
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: 'poppins',
+                                                fontWeight: FontWeight.w500),
+                                          )),
+                                          Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    snapshot.data!.body[index]
+                                                        .namaPerusahaan,
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      Get.to(() =>
+                                                          DetailMagangLimit(
+                                                              magangMain:
+                                                                  snapshot.data!
+                                                                          .body[
+                                                                      index],
+                                                              index: index));
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.arrow_forward,
+                                                      size: 35,
+                                                      color: ColorHelpers
+                                                          .colorBlackText,
+                                                    ))
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          )
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Text("Ops data magang limit tidak tersedia"),
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ))
         ],
       ),
     );
   }
 }
+
+// ignore: must_be_immutable
+

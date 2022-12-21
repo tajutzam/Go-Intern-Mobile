@@ -1,16 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_intern/APP/model/magang_penyedia.dart';
+import 'package:go_intern/APP/model/magang_limit_response.dart';
 import 'package:go_intern/APP/model/magang_response.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/lamar.dart';
 
 // ignore: must_be_immutable
-class DetailMagangPopular extends StatelessWidget {
-  DetailMagangPopular({required this.magangMain, required this.index});
-  MagangPenyedia? magangMain;
+class DetailMagangLimit extends StatelessWidget {
+  DetailMagangLimit({required this.magangMain, required this.index});
+
+  MagangLimitBody magangMain;
   int index;
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class DetailMagangPopular extends StatelessWidget {
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
                             imageUrl: UrlHelper.baseUrlImagePenyedia +
-                                magangMain!.body[index].foto,
+                                magangMain.foto,
                             imageBuilder: (context, imageProvider) => Container(
                               height: 100,
                               width: 100,
@@ -75,7 +76,7 @@ class DetailMagangPopular extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                magangMain!.body[index].posisiMagang,
+                                magangMain.posisi,
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w400,
@@ -85,7 +86,7 @@ class DetailMagangPopular extends StatelessWidget {
                                 height: 3,
                               ),
                               Text(
-                                magangMain!.body[index].namaPerusahaan,
+                                magangMain.namaPerusahaan,
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -93,7 +94,7 @@ class DetailMagangPopular extends StatelessWidget {
                               ),
                               Text(
                                 softWrap: false,
-                                magangMain!.body[index].alamat,
+                                magangMain.alamat,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 20,
@@ -136,7 +137,7 @@ class DetailMagangPopular extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            magangMain!.body[index].deskripsi,
+                            magangMain.deskripsi,
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
@@ -166,7 +167,7 @@ class DetailMagangPopular extends StatelessWidget {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: magangMain!.body[index].syarat[0].length,
+                      itemCount: magangMain.syarat[0].length, //  syarat
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.only(left: 20, top: 10),
@@ -184,7 +185,7 @@ class DetailMagangPopular extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  magangMain!.body[index].syarat[0][i].syarat,
+                                  magangMain.syarat[0][i].syarat,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: false,
                                   maxLines: 2,
@@ -213,7 +214,7 @@ class DetailMagangPopular extends StatelessWidget {
                             )),
                         Expanded(
                           child: Text(
-                            magangMain!.body[index].alamat,
+                            magangMain.alamat,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                             overflow: TextOverflow.ellipsis,
@@ -234,7 +235,7 @@ class DetailMagangPopular extends StatelessWidget {
                             )),
                         Expanded(
                           child: Text(
-                            "Rp . ${magangMain!.body[index].salary} per bulan",
+                            "Rp . ${magangMain.salary} per bulan",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                             overflow: TextOverflow.ellipsis,
@@ -255,7 +256,7 @@ class DetailMagangPopular extends StatelessWidget {
                             )),
                         Expanded(
                           child: Text(
-                            magangMain!.body[index].lowonganTersedia.toString(),
+                            magangMain.lowonganTersedia.toString(),
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                             overflow: TextOverflow.ellipsis,
@@ -279,10 +280,10 @@ class DetailMagangPopular extends StatelessWidget {
                     backgroundColor: ColorHelpers.backgroundBlueNew),
                 onPressed: () {
                   Get.to(() => LamarMagangScrenn(
-                        posisi: magangMain!.body[index].posisiMagang,
-                        namaPerusahan: magangMain!.body[index].namaPerusahaan,
-                        idMagang: magangMain!.body[index].idMagang,
-                        penyedia: magangMain!.body[index].idPenyedia,
+                        posisi: magangMain.posisi,
+                        namaPerusahan: magangMain.namaPerusahaan,
+                        idMagang: magangMain.magangId,
+                        penyedia: magangMain.penyediaId,
                       ));
                 },
                 child: Text('Lanjut'))

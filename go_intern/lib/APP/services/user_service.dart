@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/penghargaan_response.dart';
+import 'package:go_intern/APP/model/riwayat_lamaran_response.dart';
+import 'package:go_intern/APP/model/showMagang_response.dart';
 import 'package:go_intern/APP/model/user_response.dart';
 import 'package:go_intern/APP/repositories/user_repository.dart';
 import 'package:go_intern/helpers/color.dart';
@@ -18,7 +20,6 @@ class UserService {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var username = sharedPreferences.getString('username');
     return await userRepository.uploadImage(filename, path, username);
-    
   }
 
   Future<UserResponse> getDataUser(username) async {
@@ -133,5 +134,35 @@ class UserService {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getInt('id');
     userRepository.updateSuratLamaran(suratLamaran, id);
+  }
+
+  Future<ShowMagangActiveResponse?> showMagangActive() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    int? id = sharedPreferences.getInt('id');
+    if (id != null) {
+      var response = await userRepository.showMagangActive(id: id);
+      if (response.statusCode == 200) {
+        return ShowMagangActiveResponse.fromJson(jsonDecode(response.body));
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<RiwayatLamaranResponse?> showRiwayatLamaran() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    int? id = sharedPreferences.getInt('id');
+    if (id != null) {
+      var response = await userRepository.showRiwayatLamaran(id: id);
+      if (response.statusCode == 200) {
+        return RiwayatLamaranResponse.fromJson(jsonDecode(response.body));
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }

@@ -17,132 +17,130 @@ class MagangUntukmu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return magangController.isNull
-        ? Center(child: Text('Data Magang Tidak Tersedia'))
-        : magangController.magangMain != null
-            ? Obx(
-                () {
-                  return LazyLoadScrollView(
-                    scrollOffset: magangController.refreshAuto.value,
-                    onEndOfPage: () => magangController.getData(),
-                    isLoading: magangController.lastPage,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      controller: magangController.scrollController,
-                      separatorBuilder: (context, index) => Divider(
-                        color: ColorHelpers.backgroundOfIntroduction,
+    return FutureBuilder<MagangMain>(
+      future: magangController.getData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            return LazyLoadScrollView(
+              scrollOffset: magangController.refreshAuto.value,
+              onEndOfPage: () => magangController.getData(),
+              isLoading: magangController.lastPage,
+              child: ListView.separated(
+                shrinkWrap: true,
+                controller: magangController.scrollController,
+                separatorBuilder: (context, index) => Divider(
+                  color: ColorHelpers.backgroundOfIntroduction,
+                ),
+                itemCount: snapshot.data!.body.length,
+                itemBuilder: (context, index) {
+                  final DateFormat formater = DateFormat.yMMMEd();
+                  var formated =
+                      formater.format(snapshot.data!.body[index].createAt);
+                  if (index >= snapshot.data!.body.length) {
+                    if (!magangController.isDataLoading.value) {
+                      magangController.getData();
+                    }
+                    return Center(
+                      child: SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(),
                       ),
-                      itemCount: magangController.magangMain!.body.length,
-                      itemBuilder: (context, index) {
-                        final DateFormat formater = DateFormat.yMMMEd();
-                        var formated = formater.format(
-                            magangController.magangMain!.body[index].createAt);
-                        if (index >= magangController.magangMain!.body.length) {
-                          if (!magangController.isDataLoading.value) {
-                            magangController.getData();
-                          }
-                          return Center(
-                            child: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 0.5,
+                              offset: Offset(5, 5),
+                              color: Colors.grey.withOpacity(0.5),
                             ),
-                          );
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Container(
-                            height: 150,
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 0.5,
-                                    offset: Offset(5, 5),
-                                    color: Colors.grey.withOpacity(0.5),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(6))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ListTile(
+                              title: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  snapshot.data!.body[index].posisiMagang,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: ColorHelpers.colorBlackText,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              leading: CachedNetworkImage(
+                                imageUrl:
+                                    "${UrlHelper.baseUrlImagePenyedia}${snapshot.data!.body[index].foto}",
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ListTile(
-                                    title: Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Text(
-                                        magangController.magangMain!.body[index]
-                                            .posisiMagang,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: ColorHelpers.colorBlackText,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    leading: CachedNetworkImage(
-                                      imageUrl:
-                                          "${UrlHelper.baseUrlImagePenyedia}${magangController.magangMain!.body[index].foto}",
-                                      progressIndicatorBuilder: (context, url,
-                                              downloadProgress) =>
-                                          CircularProgressIndicator(
-                                              value: downloadProgress.progress),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          magangController.magangMain!
-                                              .body[index].namaPerusahaan,
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color:
-                                                  ColorHelpers.colorBlackText),
-                                        ),
-                                        Text(
-                                            "Rp. ${magangController.magangMain!.body[index].salary}")
-                                      ],
-                                    ),
-                                    trailing: Text(
-                                      "${formated}",
-                                    ),
+                                  Text(
+                                    snapshot.data!.body[index].namaPerusahaan,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: ColorHelpers.colorBlackText),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 170),
-                                    child: SizedBox(
-                                      height: 30,
-                                      width: 140,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: ColorHelpers
-                                                  .backgroundBlueNew),
-                                          onPressed: () async {
-                                            Get.to(() => DetailMagang(
-                                                  magangMain: magangController
-                                                      .magangMain,
-                                                  index: index,
-                                                ));
-                                          },
-                                          child: Text("Detail Magang")),
-                                    ),
-                                  ),
+                                  Text(
+                                      "Rp. ${snapshot.data!.body[index].salary}")
                                 ],
                               ),
+                              trailing: Text(
+                                "${formated}",
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                            Padding(
+                              padding: const EdgeInsets.only(left: 170),
+                              child: SizedBox(
+                                height: 30,
+                                width: 140,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            ColorHelpers.backgroundBlueNew),
+                                    onPressed: () async {
+                                      Get.to(() => DetailMagang(
+                                            magangMain: snapshot.data,
+                                            index: index,
+                                          ));
+                                    },
+                                    child: Text("Detail Magang")),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
-              )
-            : Text("Data tidak ada");
+              ),
+            );
+          } else {
+            return Center(child: Text('Data Magang Tidak Tersedia'));
+          }
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }
