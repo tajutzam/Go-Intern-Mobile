@@ -15,8 +15,9 @@ import 'package:path_provider/path_provider.dart';
 
 class MagangController extends GetxController {
   Timer? timer;
-
+  TextEditingController keywordController = TextEditingController();
   List<MagangKategoriBody> dataMagangKategori = [];
+  var keyword = "".obs;
 
   MagangMain? magangMain;
   var isDataLoading = true.obs;
@@ -41,6 +42,10 @@ class MagangController extends GetxController {
     return response;
   }
 
+  Future<MagangMain> findbyKeyword() async {
+    return await magangService.findMagangByKeyword(keyword: keyword.value);
+  }
+
   showMagangKategori(ktg) async {
     var responseBoll = await magangService.showMagangByKategori(kategori: ktg);
     if (responseBoll != null) {
@@ -52,6 +57,9 @@ class MagangController extends GetxController {
 
   @override
   void onInit() async {
+    keywordController.addListener(() {
+      keyword.value = keywordController.text;
+    });
     super.onInit();
     await getData();
     // every 20 seconds refresh page
@@ -62,6 +70,13 @@ class MagangController extends GetxController {
     ever(
       refreshAuto,
       (callback) => getData(),
+    );
+    debounce(
+      keyword,
+      (callback) async {
+        await findbyKeyword();
+        print(keyword);
+      },time: Duration(seconds: 1)
     );
   }
 }

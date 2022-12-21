@@ -61,7 +61,7 @@ class DetailPenyediaPopular extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.only(top: 17),
                           child: Center(
                             child: SizedBox(
                               height: 100,
@@ -95,44 +95,23 @@ class DetailPenyediaPopular extends StatelessWidget {
                             Text(
                               'Nama Perusahaan',
                               style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'poppins',
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorHelpers.colorBlackText),
-                            ),
-                            Text(
-                              namaPerusahaan.toString(),
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'poppins',
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorHelpers.colorBlackText),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Email',
-                              style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   fontFamily: 'poppins',
                                   fontWeight: FontWeight.w500,
                                   color: ColorHelpers.colorBlackText),
                             ),
                             SizedBox(
-                              width: 150,
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: 200,
                               child: Text(
-                                email,
+                                textAlign: TextAlign.end,
+                                namaPerusahaan.toString(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 17,
                                     fontFamily: 'poppins',
                                     fontWeight: FontWeight.w500,
                                     color: ColorHelpers.colorBlackText),
@@ -141,7 +120,39 @@ class DetailPenyediaPopular extends StatelessWidget {
                           ],
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 17,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Email',
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorHelpers.colorBlackText),
+                            ),
+                          
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                textAlign: TextAlign.end,
+                                email,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontFamily: 'poppins',
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorHelpers.colorBlackText),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 17,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +161,7 @@ class DetailPenyediaPopular extends StatelessWidget {
                             Text(
                               'Jumlah Lamaran Masuk',
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   fontFamily: 'poppins',
                                   fontWeight: FontWeight.w500,
                                   color: ColorHelpers.colorBlackText),
@@ -158,7 +169,7 @@ class DetailPenyediaPopular extends StatelessWidget {
                             Text(
                               jumlahMagang.toString(),
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   fontFamily: 'poppins',
                                   fontWeight: FontWeight.w500,
                                   color: ColorHelpers.colorBlackText),
@@ -166,7 +177,7 @@ class DetailPenyediaPopular extends StatelessWidget {
                           ],
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,19 +185,23 @@ class DetailPenyediaPopular extends StatelessWidget {
                             Text(
                               'Alamat',
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   fontFamily: 'poppins',
                                   fontWeight: FontWeight.w500,
                                   color: ColorHelpers.colorBlackText),
                             ),
+                            // SizedBox(
+                            //   width: 10,
+                            // ),
                             SizedBox(
-                              width: 150,
+                              width: 200,
                               child: Text(
                                 alamat,
-                                maxLines: 2,
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.end,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 17,
                                     fontFamily: 'poppins',
                                     fontWeight: FontWeight.w500,
                                     color: ColorHelpers.colorBlackText),

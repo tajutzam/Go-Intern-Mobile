@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_intern/APP/controllers/MagangController.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/view/page/dashboard_content/magang_terbaru.dart';
 import 'package:go_intern/view/page/dashboard_content/magang_untukmu.dart';
@@ -7,6 +8,7 @@ import 'package:go_intern/view/page/dashboard_content/magang_untukmu.dart';
 // ignore: must_be_immutable
 class Magang extends StatelessWidget {
   var c = Get.put(ControllerTabbar());
+  var magangC = Get.put(MagangController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,10 +18,11 @@ class Magang extends StatelessWidget {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Column(
-          children: const [
+          children:  [
             SizedBox(
               height: 50,
               child: TextField(
+                controller: magangC.keywordController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   filled: true,

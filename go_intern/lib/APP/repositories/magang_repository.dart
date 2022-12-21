@@ -32,4 +32,11 @@ class MagangRepository {
     var response = await http.get(Uri.parse(url));
     return response;
   }
+
+  Future<http.Response> findMagangByKeyword({required keyword}) async {
+    var url = "${UrlHelper.baseUrl}/magang/keyword";
+    var data = {"keyword": keyword};
+    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    return response;
+  }
 }

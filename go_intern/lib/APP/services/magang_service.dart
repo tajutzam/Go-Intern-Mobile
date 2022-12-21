@@ -20,7 +20,7 @@ class MagangService {
 
   Future<MagangLimit1> showMagangLimit() async {
     var response = await repository.showDataMagangLimit1();
-      return MagangLimit1.fromJson(jsonDecode(response.body));
+    return MagangLimit1.fromJson(jsonDecode(response.body));
   }
 
   Future<bool> batalkanLamaran({required idMagang}) async {
@@ -38,6 +38,12 @@ class MagangService {
     var response = await repository.getDataMagang();
     print(response.body);
     print(response.statusCode);
-      return MagangMain.fromJson(jsonDecode(response.body));
+    return MagangMain.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MagangMain> findMagangByKeyword({required keyword}) async {
+    var response = await repository.findMagangByKeyword(keyword: keyword);
+    print(response.statusCode);
+    return MagangMain.fromJson(jsonDecode(response.body));
   }
 }
