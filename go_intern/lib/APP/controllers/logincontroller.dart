@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
@@ -53,6 +54,7 @@ class LoginController extends GetxController {
       "username": usC.text,
       "password": passC.text
     };
+    EasyLoading.show(status: "Tunggu sebentar");
     var respons = await http.post(Uri.parse(url),
         body: jsonEncode(sendData),
         headers: <String, String>{
@@ -61,18 +63,22 @@ class LoginController extends GetxController {
 
     var data = jsonDecode(respons.body);
     if (respons.statusCode == 404) {
+      EasyLoading.dismiss();
       Get.snackbar('Gagal Login', data['body'][0],
           colorText: Colors.white,
           backgroundColor: ColorHelpers.colorSnackbarfailed);
     } else if (respons.statusCode == 401) {
+      EasyLoading.dismiss();
       Get.snackbar('Gagal login', data['body'][0]['message'],
           colorText: Colors.white,
           backgroundColor: ColorHelpers.colorSnackbarfailed);
     } else if (respons.statusCode == 400) {
+      EasyLoading.dismiss();
       Get.snackbar('Gagal login', data['message'],
           colorText: ColorHelpers.colorBlackText,
           backgroundColor: ColorHelpers.colorSnackbarfailed);
     } else {
+      EasyLoading.dismiss();
       var dashC = Get.put(DashboardController());
       // dashC.checkFoto();
       Get.snackbar("Succes", "Berhasil Login",
@@ -158,19 +164,22 @@ class LoginController extends GetxController {
 
   showPenghargaanByPencariMagang() async {
     var response = await userService.showPenghargaan();
-    var responseData = jsonDecode(response.body);
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.remove('penghargaan');
-    var id = responseData['body'][0]['id_penghargaan'];
-    sharedPreferences.setInt('penghargaan', id);
+    if (response != null) {
+      var responseData = jsonDecode(response.body);
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.remove('penghargaan');
+      var id = responseData['body'][0]['id_penghargaan'];
+      sharedPreferences.setInt('penghargaan', id);
+    }
   }
 
   getDatPenghargaan() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var idPenghargaan = sharedPreferences.getInt('penghargaan');
-    if (idPenghargaan != 0) {
+    if (idPenghargaan != null) {
       dataList[3] = "ada datanya";
-      interactPenghargaan.value = idPenghargaan!;
+      interactPenghargaan.value = idPenghargaan;
       var dataPenghargaan =
           await userService.showPenghargaanuser(idPenghargaan);
       judulPenghargaan.value = dataPenghargaan.body[0].judul;
@@ -212,9 +221,9 @@ class LoginController extends GetxController {
       },
     );
   }
-
   @override
   void dispose() {
+    super.dispose();
     usC.clear();
     passC.clear();
     deskripsiC.clear();

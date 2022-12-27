@@ -10,6 +10,7 @@ import 'package:go_intern/APP/controllers/personalcontroller.dart';
 import 'package:go_intern/APP/model/magang_limit_response.dart';
 import 'package:go_intern/APP/model/magang_response.dart';
 import 'package:go_intern/APP/model/magangbykategori_response.dart';
+import 'package:go_intern/APP/model/penyedia_response.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/detail_magang_limit.dart';
@@ -120,7 +121,7 @@ class DashboardScrenn extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15),
-            child: FutureBuilder(
+            child: FutureBuilder<Penyedia?>(
               future: dashC.getPopularPenyedia(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -168,7 +169,7 @@ class DashboardScrenn extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
-                                    dashC.dataPopular[index].namaPerusahaan,
+                                    snapshot.data!.body[index].namaPerusahaan,
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
@@ -183,7 +184,7 @@ class DashboardScrenn extends StatelessWidget {
                                     CachedNetworkImage(
                                       height: 70,
                                       imageUrl: UrlHelper.baseUrlImagePenyedia +
-                                          dashC.dataPopular[index].foto,
+                                          snapshot.data!.body[index].foto,
                                       progressIndicatorBuilder: (context, url,
                                               downloadProgress) =>
                                           CircularProgressIndicator(
@@ -199,28 +200,29 @@ class DashboardScrenn extends StatelessWidget {
                                         child: ElevatedButton(
                                           onPressed: () async {
                                             var responseMagang = await dashC
-                                                .getDataMagangPenyedia(dashC
-                                                    .dataPopular[index].id);
+                                                .getDataMagangPenyedia(snapshot
+                                                    .data!.body[index].id);
                                             Get.to(
                                               () => DetailPenyediaPopular(
-                                                namaPerusahaan: dashC
-                                                    .dataPopular[index]
-                                                    .namaPerusahaan,
-                                                email: dashC
-                                                    .dataPopular[index].email,
-                                                jumlahMagang: dashC
-                                                    .dataPopular[index].jumlah,
-                                                alamat: dashC
-                                                    .dataPopular[
+                                                namaPerusahaan: snapshot.data!
+                                                    .body[index].namaPerusahaan,
+                                                email: snapshot
+                                                    .data!.body[index].email,
+                                                jumlahMagang: snapshot
+                                                    .data!.body[index].jumlah,
+                                                alamat: snapshot
+                                                    .data!
+                                                    .body[
                                                         index] // padding: EdgeInsets.only(bottom: 10),
                                                     // scrollDirection: Axis.horizontal,
                                                     // controller: dashC.scrollController,
                                                     // reverse: true,
                                                     .alamatPerusahaan,
-                                                foto: dashC
-                                                    .dataPopular[index].foto,
-                                                jumlahMagangtersedia: dashC
-                                                    .dataPopular[index]
+                                                foto: snapshot
+                                                    .data!.body[index].foto,
+                                                jumlahMagangtersedia: snapshot
+                                                    .data!
+                                                    .body[index]
                                                     .jumlahMagang,
                                                 dataMagang: responseMagang,
                                               ),
@@ -240,7 +242,7 @@ class DashboardScrenn extends StatelessWidget {
                           ),
                         );
                       },
-                      itemCount: dashC.dataPopular.length,
+                      itemCount: snapshot.data!.body.length,
                       options: CarouselOptions(
                         autoPlay: true,
                         viewportFraction: 0.6,
@@ -274,7 +276,7 @@ class DashboardScrenn extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 15),
             child: SizedBox(
-                height: 150,
+                height: 100,
                 child: FutureBuilder(
                   future: dashC.getKategori(),
                   builder: (context, snapshot) {
@@ -293,24 +295,25 @@ class DashboardScrenn extends StatelessWidget {
                                   } else {}
                                   Get.to(() => MagangByKategori(
                                       dataMagang: dataToSend,
-                                      kategori: snapshot.data!.body[index].kategori,
-                                      kategoriId: snapshot.data!.body[index].id));
+                                      kategori:
+                                          snapshot.data!.body[index].kategori,
+                                      kategoriId:
+                                          snapshot.data!.body[index].id));
                                 },
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: 70,
-                                      width: 70,
-                                      child: Image(
-                                        image: AssetImage(
-                                            "assets/images/komputer.png"),
-                                      ),
-                                    ),
-                                    SizedBox(
                                       height: 10,
                                     ),
+                                    CachedNetworkImage(
+                                      imageUrl: UrlHelper.kategoriImg +
+                                          snapshot.data!.body[index].foto,
+                                      height: 40,
+                                    ),
+                                    SizedBox(height: 5,) , 
                                     Text(
-                                      snapshot.data!.body[index].kategori.toString(),
+                                      snapshot.data!.body[index].kategori
+                                          .toString(),
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
@@ -351,7 +354,7 @@ class DashboardScrenn extends StatelessWidget {
           ),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: FutureBuilder<MagangLimit1>(
+              child: FutureBuilder<MagangLimit1?>(
                 future: dashC.getMagangLimit(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {

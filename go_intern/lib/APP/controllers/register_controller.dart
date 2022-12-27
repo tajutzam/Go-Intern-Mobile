@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
@@ -30,7 +31,6 @@ class RegisterController extends GetxController {
 
   register() async {
     String urlRegister = UrlHelper.baseUrl + "/mobile/register";
-
     var jkvalue;
     if (jenisKelamin.value == "Laki-Laki") {
       jkvalue = "L";
@@ -57,11 +57,13 @@ class RegisterController extends GetxController {
     var urlSendEmail = "${UrlHelper.baseUrl}/verivication/${usC.text}";
     Map<String, dynamic> responseData = json.decode(response.body);
     print(response.body);
+    EasyLoading.show(status: "loading . . . ");
     if (responseData['status'] == "oke") {
       var responseSendMail = await http.get(Uri.parse(urlSendEmail));
       Get.snackbar('Success',
           "Berhasil regristasi , harap cek email anda untuk aktifasi",
           backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
+      EasyLoading.dismiss();
       Get.offNamed("/login");
     } else if (responseData['status'] == 'failed') {
       print("ok");

@@ -33,14 +33,17 @@ class KategoriBody {
   KategoriBody({
     required this.id,
     required this.kategori,
+    required this.foto
   });
 
   int id;
   String kategori;
+  String foto;
 
   factory KategoriBody.fromJson(Map<String, dynamic> json) => KategoriBody(
         id: json["id"],
         kategori: json["kategori"],
+        foto: json['foto']
       );
 
   Map<String, dynamic> toJson() => {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
+import 'package:validators/validators.dart';
 
 class LoginPage extends StatelessWidget {
   final controller = Get.put(ValidasiControllers());
@@ -39,7 +40,10 @@ class LoginPage extends StatelessWidget {
                     validator: (value) {
                       if (value.toString().isEmpty) {
                         return "Username tidak boleh kosong";
+                      } else if (!isUppercase(value![0])) {
+                        return "Username harus di awali dengan huruf kapital";
                       }
+                      return null;
                     },
                     autocorrect: true,
                     decoration: InputDecoration(

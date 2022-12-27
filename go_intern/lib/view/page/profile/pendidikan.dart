@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
@@ -162,7 +163,12 @@ class Pendidikan extends StatelessWidget {
                                                                     .jurusanTemp
                                                                     .value);
                                                         Get.snackbar('success',
-                                                            'Succes memambahkan sekolah ,  silahkan pilih sekolah mu' , backgroundColor: ColorHelpers.colorSnackbar , colorText: Colors.white);
+                                                            'Succes memambahkan sekolah ,  silahkan pilih sekolah mu',
+                                                            backgroundColor:
+                                                                ColorHelpers
+                                                                    .colorSnackbar,
+                                                            colorText:
+                                                                Colors.white);
                                                         Navigator.pop(context);
                                                       },
                                                       child: Text(
@@ -288,6 +294,7 @@ class Pendidikan extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: ColorHelpers.backgroundBlueNew),
                     onPressed: () async {
+                      EasyLoading.show(status: "Tunggu Sebentar . . .");
                       if (_form.currentState!.validate()) {
                         userC.addSekolahToJurusan(
                             userC.sekolahTemp.value, userC.jurusanTemp.value);
@@ -302,18 +309,22 @@ class Pendidikan extends StatelessWidget {
                         losC.interactPendidikan.value++;
 
                         if (responseBool) {
+                          EasyLoading.dismiss();
                           Get.snackbar(
                               'success', 'berhasil menambahkan data sekolah',
                               backgroundColor: ColorHelpers.colorSnackbar,
                               colorText: Colors.white);
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
-                        }else{
+                        } else {
+                          EasyLoading.dismiss();
                           Get.snackbar(
                               'failed', 'Gagal menambahkan data sekolah',
                               backgroundColor: ColorHelpers.colorSnackbarfailed,
                               colorText: Colors.white);
                         }
+                      } else {
+                        EasyLoading.dismiss();
                       }
                     },
                     child: Text(

@@ -7,10 +7,12 @@ import 'package:go_intern/APP/repositories/penyedia_repository.dart';
 class PenyediaService {
   PenyediaRepository penyediaRepository = PenyediaRepository();
 
-  getDataPopular() async {
+  Future<Penyedia?>getDataPopular() async {
     var response = await penyediaRepository.getDataPopular();
     if (response.statusCode == 200) {
       return Penyedia.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
     }
   }
 

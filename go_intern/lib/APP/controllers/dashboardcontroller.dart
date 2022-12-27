@@ -49,11 +49,11 @@ class DashboardController extends GetxController {
     }
   }
 
-  Future getPopularPenyedia() async {
-    Penyedia response = await penyediaService.getDataPopular();
-    for (var element in response.body) {
-      dataPopular.add(element);
-    }
+  Future<Penyedia?> getPopularPenyedia() async {
+    Penyedia? response = await penyediaService.getDataPopular();
+    // for (var element in response!.body) {
+    //   dataPopular.add(element);
+    // }
     return response;
   }
 
@@ -89,8 +89,8 @@ class DashboardController extends GetxController {
     }
   }
 
-  Future<MagangLimit1> getMagangLimit() async {
-    MagangLimit1 data = await magangService.showMagangLimit();
+  Future<MagangLimit1?> getMagangLimit() async {
+    MagangLimit1? data = await magangService.showMagangLimit();
     return data;
   }
 

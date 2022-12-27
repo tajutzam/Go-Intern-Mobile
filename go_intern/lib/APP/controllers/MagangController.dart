@@ -37,7 +37,7 @@ class MagangController extends GetxController {
   bool get lastPage => _lastPage.value;
   MagangService magangService = MagangService();
 
-  Future<MagangMain> getData() async {
+  Future<MagangMain?> getData() async {
     var response = await magangService.getDataMagang();
     return response;
   }

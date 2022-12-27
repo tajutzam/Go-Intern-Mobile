@@ -221,4 +221,26 @@ class UserRepository {
     var response = await http.post(Uri.parse(url), body: json.encode(data));
     return response;
   }
+
+  Future<http.Response> sendOtp({required username}) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/sendotp";
+    var data = {"username": username};
+    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    return response;
+  }
+
+  Future<http.Response> verivikasi({required username, required otp}) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/otp/veriv";
+    var data = {"username": username, "otp": otp};
+    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    return response;
+  }
+
+  Future<http.Response> updatePassword(
+      {required username, required password}) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/resetpassword";
+    var data = {"username": username, "password": password};
+    var response = http.post(Uri.parse(url), body: jsonEncode(data));
+    return response;
+  }
 }

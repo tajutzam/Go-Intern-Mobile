@@ -6,4 +6,5 @@ class UrlHelper {
   static String baseUrlImagePencariMagang =
       "http://192.168.3.119:8080/image/pencari_magang/";
   static String assets = "http://192.168.3.119:8080/";
+  static String kategoriImg = "http://192.168.3.119:8080/image/kategori/";
 }

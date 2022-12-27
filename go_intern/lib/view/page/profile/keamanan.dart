@@ -4,6 +4,7 @@ import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/keamananController.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
+import 'package:go_intern/view/page/forget_password/lupapassword.dart';
 import 'package:go_intern/view/page/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -139,6 +140,22 @@ class KemananScrenn extends StatelessWidget {
                             border: InputBorder.none),
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(LupaPassword());
+                      },
+                      child: Text(
+                        textAlign: TextAlign.end,
+                        "Lupa password ?",
+                        style: TextStyle(
+                            color: ColorHelpers.backgroundBlueNew,
+                            fontFamily: 'poppins',
+                            fontSize: 17),
+                      ),
+                    )
                   ],
                 ),
               ),

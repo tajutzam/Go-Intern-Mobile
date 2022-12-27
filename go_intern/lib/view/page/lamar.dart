@@ -4,6 +4,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/lowonganController.dart';
@@ -355,6 +356,7 @@ class LamarMagangScrenn extends StatelessWidget {
                             backgroundColor: ColorHelpers.colorSnackbarfailed);
                       } else {
                         if (_form.currentState!.validate()) {
+                          EasyLoading.show(status: "Tunggu sebentar . . .");
                           if (lowonganC.checkBeforeSend()) {
                             var response = await lowonganC.addLowongan(
                                 idMagang: idMagang, idPenyediaMagang: penyedia);
@@ -362,11 +364,14 @@ class LamarMagangScrenn extends StatelessWidget {
                             lowonganC.noHp.value =
                                 int.parse(lowonganC.noHpC.text);
                             if (response) {
+                              EasyLoading.dismiss();
                               Get.offNamed('/home');
                             } else {
+                              EasyLoading.dismiss();
                               print('gagal upload');
                             }
                           } else {
+                            EasyLoading.dismiss();
                             print('tidak lengkap');
                           }
                         }

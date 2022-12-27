@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/SkillController.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
@@ -86,23 +87,31 @@ class Skill extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: ColorHelpers.backgroundBlueNew),
                     onPressed: () async {
+                      EasyLoading.show(status: "Tunggu sebentar . . .");
                       SharedPreferences sharedPreferences =
                           await SharedPreferences.getInstance();
                       int? id = sharedPreferences.getInt('id');
                       if (skilC.dataSkil.isEmpty) {
+                        EasyLoading.dismiss();
                         Get.snackbar(
                             'failed', 'Tambahkan skill terlebih dahulu');
                       } else {
                         bool isTrue =
                             await skilC.saveSkill(skilC.dataSkil, id!);
                         if (isTrue) {
-                          Get.snackbar('Succes', 'Berhasil  menambahkan skill');
+                          EasyLoading.dismiss();
+                          Get.snackbar('Succes', 'Berhasil  menambahkan skill',
+                              backgroundColor: ColorHelpers.colorSnackbar,
+                              colorText: Colors.white);
                           // ignore: use_build_context_synchronously
                           logC.interactSkill.value++;
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pop();
                         } else {
-                          Get.snackbar('failed', 'Gagal menambahkan skill');
+                          Get.snackbar('failed', 'Gagal menambahkan skill',
+                              backgroundColor: ColorHelpers.colorSnackbarfailed,
+                              colorText: Colors.white);
+                          EasyLoading.dismiss();
                         }
                       }
                     },

@@ -21,7 +21,7 @@ class MagangUntukmu extends StatelessWidget {
       () {
         // ignore: unrelated_type_equality_checks
         return magangController.keyword.isEmpty
-            ? FutureBuilder<MagangMain>(
+            ? FutureBuilder<MagangMain?>(
                 future: magangController.getData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {

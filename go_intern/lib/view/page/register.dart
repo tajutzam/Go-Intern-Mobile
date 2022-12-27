@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/register_controller.dart';
 import 'package:go_intern/helpers/color.dart';
@@ -285,6 +286,7 @@ class RegisterScrenn extends StatelessWidget {
                       onPressed: () {
                         // todolist register service
                         if (_form.currentState!.validate()) {
+                    
                           registerC.register();
                         }
                       },

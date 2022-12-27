@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
@@ -53,7 +54,11 @@ class UserService {
   showPenghargaan() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getInt('id');
-    return await userRepository.showPenghargaanByPencariMagang(id);
+    if (id != null) {
+      return await userRepository.showPenghargaanByPencariMagang(id);
+    } else {
+      return null;
+    }
   }
 
   updateDeskripsiSekolah(deskripsi) async {
@@ -163,6 +168,41 @@ class UserService {
       }
     } else {
       return null;
+    }
+  }
+
+  Future<bool> sendOtp({required username}) async {
+    var response = await userRepository.sendOtp(username: username);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> verivikasi({required username, required otp}) async {
+    var response =
+        await userRepository.verivikasi(username: username, otp: otp);
+    EasyLoading.show(status: "Tunggu sebentar . . .");
+    if (response.statusCode == 200) {
+      EasyLoading.dismiss();
+      return true;
+    } else {
+      EasyLoading.dismiss();
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword({required username, required password}) async {
+    var response = await userRepository.updatePassword(
+        username: username, password: password);
+    EasyLoading.show(status: "Tunggu sebentar . . .");
+    if (response.statusCode == 200) {
+      EasyLoading.dismiss();
+      return true;
+    } else {
+      EasyLoading.dismiss();
+      return false;
     }
   }
 }

@@ -18,9 +18,13 @@ class MagangService {
     }
   }
 
-  Future<MagangLimit1> showMagangLimit() async {
+  Future<MagangLimit1?> showMagangLimit() async {
     var response = await repository.showDataMagangLimit1();
-    return MagangLimit1.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return MagangLimit1.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
   }
 
   Future<bool> batalkanLamaran({required idMagang}) async {
@@ -34,11 +38,13 @@ class MagangService {
     return false;
   }
 
-  Future<MagangMain> getDataMagang() async {
+  Future<MagangMain?> getDataMagang() async {
     var response = await repository.getDataMagang();
-    print(response.body);
-    print(response.statusCode);
-    return MagangMain.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return MagangMain.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
   }
 
   Future<MagangMain> findMagangByKeyword({required keyword}) async {

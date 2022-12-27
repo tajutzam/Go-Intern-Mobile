@@ -279,8 +279,7 @@ class DetailPenyediaPopular extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          dataMagang!.body[index].salary
-                                              .toString(),
+                                          "Rp.${dataMagang!.body[index].salary}",
                                           style: TextStyle(
                                               fontSize: 17,
                                               fontFamily: 'poppins',
