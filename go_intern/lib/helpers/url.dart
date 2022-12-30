@@ -1,10 +1,10 @@
 class UrlHelper {
-  static String baseUrl = "http://192.168.3.119:8080/api";
+  static String baseUrl = "http://143.198.198.61/api";
   static String baseUrlImagePenyedia =
-      "http://192.168.3.119:8080/image/penyedia/";
+      "http://143.198.198.61/image/penyedia/";
   static String baseUrlSekolah = "https://api-sekolah-indonesia.herokuapp.com";
   static String baseUrlImagePencariMagang =
-      "http://192.168.3.119:8080/image/pencari_magang/";
-  static String assets = "http://192.168.3.119:8080/";
-  static String kategoriImg = "http://192.168.3.119:8080/image/kategori/";
+      "http://143.198.198.61/image/pencari_magang/";
+  static String assets = "http://143.198.198.61/";
+  static String kategoriImg = "http://143.198.198.61/image/kategori/";
 }

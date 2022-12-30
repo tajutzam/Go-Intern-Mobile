@@ -35,11 +35,9 @@ class LowonganController extends GetxController {
     var responseId = await userService.findById(id);
     cv.value = responseId.body[0].cv;
   }
-
   updateSuratLowongan() async {
     userService.updateSuratLamaran(suratLamaran: suratLamaran.text);
   }
-
   fetchDataToLowongan() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getInt('id');

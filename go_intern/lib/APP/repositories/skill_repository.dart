@@ -34,7 +34,6 @@ class SkilRepository {
   Future<http.Response> showSkils(id) async {
     var url = "${UrlHelper.baseUrl}/skill/showskillbypencari/$id";
     var response = await http.get(Uri.parse(url));
-    print(response.body);
     return response;
   }
 

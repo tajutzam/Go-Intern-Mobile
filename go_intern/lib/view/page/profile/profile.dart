@@ -145,7 +145,7 @@ class ProfilePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 20),
                   child: Text(
-                    logC.nama.value,
+                    dashC.nama.value,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -400,14 +400,15 @@ class ProfilePage extends StatelessWidget {
                                 () => Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    logC.dataList.value[index] == ""
+                                    usC.data[index] == ""
                                         ? Text(
                                             "Tambahkan ${data[index]}",
                                             textAlign: TextAlign.start,
                                           )
                                         : Text("Update ${data[index]}",
                                             textAlign: TextAlign.start),
-                                    Icon(logC.dataList.value[index] == ""
+                                    // ignore: invalid_use_of_protected_member
+                                    Icon(usC.data.value[index] == ""
                                         ? Icons.add
                                         : Icons.edit)
                                   ],
@@ -507,7 +508,6 @@ class ProfilePage extends StatelessWidget {
                             logC.interactPenghargaan.value = 0;
                             sharedPreferences.remove('penghargaan');
                             logC.logout();
-                            logC.dispose();
                             usC.dispose();
                             botC.tabIndex.value = 0;
                             Get.snackbar('Sucess', 'Berhasil logout',

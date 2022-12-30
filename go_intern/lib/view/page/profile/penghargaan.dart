@@ -2,19 +2,17 @@
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
-import 'package:go_intern/helpers/url.dart';
 import 'package:go_intern/view/page/profile/pdfView.dart';
 
 class Penghargaan extends StatelessWidget {
   Penghargaan({super.key});
   final userC = Get.put(UserController());
   final _form = GlobalKey<FormState>();
-  final logC = Get.find<LoginController>();
+  // final logC = Get.find<LoginController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +59,7 @@ class Penghargaan extends StatelessWidget {
                       return null;
                     }
                   },
-                  controller: logC.judulC,
+                  controller: userC.judulPenghargaan,
                   autocorrect: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -93,7 +91,7 @@ class Penghargaan extends StatelessWidget {
                         border: Border.all(color: ColorHelpers.colorBlackText),
                         borderRadius: BorderRadius.circular(4)),
                   ),
-                  logC.interactPenghargaan.value == 0
+                  userC.penghargaanInteract.value == 0
                       ? InkWell(
                           onTap: () async {
                             FilePickerResult? result = await FilePicker.platform
@@ -108,7 +106,10 @@ class Penghargaan extends StatelessWidget {
                                   result.files.single.extension != 'doc' &&
                                   result.files.single.extension != 'txt') {
                                 Get.snackbar('Failed',
-                                    'Extensions salah , harap pilih pdf atau sejenisnya' , backgroundColor: ColorHelpers.colorSnackbarfailed , colorText: Colors.white);
+                                    'Extensions salah , harap pilih pdf atau sejenisnya',
+                                    backgroundColor:
+                                        ColorHelpers.colorSnackbarfailed,
+                                    colorText: Colors.white);
                               } else {
                                 // todo input file penghargaan
                                 userC.pathPenghargaan.value =
@@ -159,7 +160,7 @@ class Penghargaan extends StatelessWidget {
                                 child: Center(
                                     child: Obx(
                                   () => Text(
-                                    logC.filenamePenghargaan.value,
+                                    userC.penghargaan.value,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 15,
@@ -178,7 +179,7 @@ class Penghargaan extends StatelessWidget {
                                 InkWell(
                                   onTap: () {
                                     Get.to(PenghargaanView.new, arguments: [
-                                      {"file": logC.filenamePenghargaan.value}
+                                      {"file": userC.penghargaan.value}
                                     ]);
                                     print('pdf view run');
                                   },
@@ -212,7 +213,10 @@ class Penghargaan extends StatelessWidget {
                                           result.files.single.extension !=
                                               'txt') {
                                         Get.snackbar('Failed',
-                                            'Extensions salah , harap pilih pdf atau sejenisnya'  , backgroundColor: ColorHelpers.colorSnackbar , colorText: Colors.white);
+                                            'Extensions salah , harap pilih pdf atau sejenisnya',
+                                            backgroundColor:
+                                                ColorHelpers.colorSnackbar,
+                                            colorText: Colors.white);
                                       } else {
                                         // todo input file penghargaan
                                         userC.pathPenghargaan.value =
@@ -245,7 +249,7 @@ class Penghargaan extends StatelessWidget {
               ),
               SizedBox(
                 height: 40,
-                child: logC.interactPenghargaan.value == 0
+                child: userC.penghargaanInteract.value == 0
                     ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorHelpers.backgroundBlueNew,
@@ -254,20 +258,29 @@ class Penghargaan extends StatelessWidget {
                           if (_form.currentState!.validate()) {
                             if (userC.pathPenghargaan.value == "") {
                               Get.snackbar('failed',
-                                  'harap pilih dokumen terlebih dahulu' , colorText: Colors.white , backgroundColor: ColorHelpers.colorSnackbarfailed);
+                                  'harap pilih dokumen terlebih dahulu',
+                                  colorText: Colors.white,
+                                  backgroundColor:
+                                      ColorHelpers.colorSnackbarfailed);
                             } else {
                               var result = await userC.addPennghargaan(
                                   userC.pathPenghargaan.value,
-                                  logC.judulC.text);
+                                  userC.judulPenghargaan.text);
                               if (result) {
                                 Get.snackbar('succes',
-                                    'Berhasil menambahkan penghargaan' , colorText: Colors.white , backgroundColor: ColorHelpers.colorSnackbar);
-                                logC.interactPenghargaan.value++;
+                                    'Berhasil menambahkan penghargaan',
+                                    colorText: Colors.white,
+                                    backgroundColor:
+                                        ColorHelpers.colorSnackbar);
+                                userC.showDataUser();
                                 Navigator.pop(context);
                                 userC.dispose();
                               } else {
                                 Get.snackbar(
-                                    'failed', 'Gagal menambahkan penghargaan' , colorText: Colors.white , backgroundColor: ColorHelpers.colorSnackbarfailed);
+                                    'failed', 'Gagal menambahkan penghargaan',
+                                    colorText: Colors.white,
+                                    backgroundColor:
+                                        ColorHelpers.colorSnackbarfailed);
                               }
                             }
                           }
@@ -288,13 +301,14 @@ class Penghargaan extends StatelessWidget {
                             } else {
                               var result = await userC.addPennghargaan(
                                   userC.pathPenghargaan.value,
-                                  logC.judulC.text);
+                                  userC.judulPenghargaan.text);
                               if (result) {
                                 Get.snackbar('succes',
                                     'Berhasil  memperbarui penghargaan',
                                     backgroundColor: ColorHelpers.colorSnackbar,
                                     colorText: Colors.white);
-                                logC.interactPenghargaan.value++;
+                                // userC.penghargaanInteract.value++;
+                                userC.showDataUser();
                                 Navigator.pop(context);
                                 userC.dispose();
                               } else {

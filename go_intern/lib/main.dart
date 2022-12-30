@@ -55,16 +55,14 @@ class GoInternApp extends StatelessWidget {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       var isLogin = sharedPreferences.getBool('login');
-      print(isLogin);
       if (isLogin != null) {
         if (isLogin) {
-          print("is login true");
-          Get.off(HomePageScrenn.new);
+          return true;
         } else {
-          print("is login false");
+          return false;
         }
       } else {
-        print("is login null");
+        return false;
       }
     }
 
@@ -101,12 +99,43 @@ class GoInternApp extends StatelessWidget {
         GetPage(name: "/recent", page: recent_apply.new)
       ],
       home: FutureBuilder(
-        future: Future.delayed(Duration(seconds: 3)),
+        future: checkLogin(),
         builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SplashScreen();
+          if (snapshot.hasData) {
+            if (snapshot.data == true) {
+              return FutureBuilder(
+                future: Future.delayed(Duration(seconds: 3)),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SplashScreen();
+                  } else {
+                    return HomePageScrenn();
+                  }
+                },
+              );
+            } else {
+              return FutureBuilder(
+                future: Future.delayed(Duration(seconds: 3)),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SplashScreen();
+                  } else {
+                    return IntroDuctionPage();
+                  }
+                },
+              );
+            }
           } else {
-            return const IntroDuctionPage();
+            return FutureBuilder(
+              future: Future.delayed(Duration(seconds: 3)),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SplashScreen();
+                } else {
+                  return IntroDuctionPage();
+                }
+              },
+            );
           }
         },
       ),

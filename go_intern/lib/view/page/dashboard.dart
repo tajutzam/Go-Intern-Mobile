@@ -63,8 +63,6 @@ class DashboardScrenn extends StatelessWidget {
                                 CircularProgressIndicator(),
                             fit: BoxFit.cover,
                             // ignore: unnecessary_null_comparison
-                            errorWidget: (context, url, error) =>
-                                Image.asset("assets/images/woman.png"),
                             imageUrl: UrlHelper.baseUrlImagePencariMagang +
                                 dashC.foto.value.toString(),
                             imageBuilder: (context, imageProvider) => Container(
@@ -85,7 +83,7 @@ class DashboardScrenn extends StatelessWidget {
                     () => Padding(
                       padding: const EdgeInsets.only(top: 10, left: 20),
                       child: Text(
-                        "Hai ,${loginC.nama}  ayo temukan tempat magang terbaik mu",
+                        "Hai ,${dashC.nama}  ayo temukan tempat magang terbaik mu",
                         style: TextStyle(
                             color: ColorHelpers.colorBlackText,
                             fontSize: 20,
@@ -310,7 +308,9 @@ class DashboardScrenn extends StatelessWidget {
                                           snapshot.data!.body[index].foto,
                                       height: 40,
                                     ),
-                                    SizedBox(height: 5,) , 
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     Text(
                                       snapshot.data!.body[index].kategori
                                           .toString(),

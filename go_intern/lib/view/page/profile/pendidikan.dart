@@ -265,7 +265,7 @@ class Pendidikan extends StatelessWidget {
                               return null;
                             }
                           },
-                          controller: losC.deskripsiC,
+                          controller: userC.deskripsiC,
                           minLines: 6,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
@@ -307,7 +307,6 @@ class Pendidikan extends StatelessWidget {
                             id);
                         losC.updateDeskripsiSekolah();
                         losC.interactPendidikan.value++;
-
                         if (responseBool) {
                           EasyLoading.dismiss();
                           Get.snackbar(

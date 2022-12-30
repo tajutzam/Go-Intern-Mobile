@@ -93,11 +93,17 @@ class UserRepository {
     return response;
   }
 
-  showDatasekolah(id) async {
+  Future<http.Response> showDatasekolah(id) async {
     var url = "${UrlHelper.baseUrl}/pencarimagang/showdatasekolah";
     var data = {"id": id};
     var response = await http.post(Uri.parse(url), body: jsonEncode(data));
     return response;
+  }
+
+  Future<http.Response> showJurusanUser(id) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/showjurusan";
+    var body = {"id": id};
+    return await http.post(Uri.parse(url), body: jsonEncode(body));
   }
 
   upadatePenghargaan(filename, judul, username) async {
@@ -110,7 +116,6 @@ class UserRepository {
         'penghargaan', File(filename).readAsBytesSync(),
         filename: fileNamevalue);
     request.files.add(file);
-    var boolResponse;
     var res = await request.send();
     if (res.statusCode == 201) {
       return true;
@@ -119,11 +124,10 @@ class UserRepository {
     }
   }
 
-  showPenghargaan(int id) async {
+  Future<http.Response>showPenghargaan(int id) async {
     var url = "${UrlHelper.baseUrl}/penghargaan/findById";
     Map<String, int> data = {"id": id};
     var res = await http.post(Uri.parse(url), body: jsonEncode(data));
-    print(res.body);
     return res;
   }
 

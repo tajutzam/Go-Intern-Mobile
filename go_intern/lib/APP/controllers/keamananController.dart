@@ -39,10 +39,12 @@ class KeamananController extends GetxController {
       if (passwordBaruC.text.isEmpty) {
         var response =
             userService.updateDataKeamanan(usernameC.text, passwordLama.value);
+            print("${response}keamanan");
         return response;
       } else {
         var response =
             userService.updateDataKeamanan(usernameC.text, passwordBaruC.text);
+                print("${response}keamanan");
         return response;
       }
     }

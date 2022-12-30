@@ -48,7 +48,6 @@ class PersonalController extends GetxController {
 
     return response;
   }
-
   @override
   void onInit() async {
     super.onInit();

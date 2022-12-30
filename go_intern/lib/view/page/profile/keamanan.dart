@@ -177,7 +177,6 @@ class KemananScrenn extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       if (isClear) {
                         logC.logout();
-                        logC.dispose();
                         usC.dispose();
                         botC.tabIndex.value = 0;
                         Get.offNamed("/login");

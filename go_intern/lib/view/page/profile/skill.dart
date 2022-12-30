@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/SkillController.dart';
+import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/logincontroller.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,7 @@ class Skill extends StatelessWidget {
   var skilC = Get.put(SkillController());
   final _form = GlobalKey<FormState>();
   final logC = Get.find<LoginController>();
-
+  var usC = Get.put(UserController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +105,7 @@ class Skill extends StatelessWidget {
                               backgroundColor: ColorHelpers.colorSnackbar,
                               colorText: Colors.white);
                           // ignore: use_build_context_synchronously
-                          logC.interactSkill.value++;
+                            usC.showDataUser();
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pop();
                         } else {

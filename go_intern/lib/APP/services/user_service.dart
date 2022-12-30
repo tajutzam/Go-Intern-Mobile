@@ -7,6 +7,7 @@ import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/penghargaan_response.dart';
 import 'package:go_intern/APP/model/riwayat_lamaran_response.dart';
+import 'package:go_intern/APP/model/sekolah_user_response.dart';
 import 'package:go_intern/APP/model/showMagang_response.dart';
 import 'package:go_intern/APP/model/user_response.dart';
 import 'package:go_intern/APP/repositories/user_repository.dart';
@@ -38,8 +39,17 @@ class UserService {
     return await userRepository.addDataSekolah(sekolah, jurusan, id);
   }
 
-  showDataSekolah(id) async {
-    return await userRepository.showDatasekolah(id);
+  Future<SekolahUser?> showDataSekolah(id) async {
+    var response = await userRepository.showDatasekolah(id);
+    if (response.statusCode == 200) {
+      return SekolahUser.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+  Future showJurusanUser(id) async {
+    return await userRepository.showJurusanUser(id);
   }
 
   updatePenghargaan(filename, judul, username) async {
@@ -68,7 +78,7 @@ class UserService {
     return response;
   }
 
-  showDataUser() async {
+  Future<Datauser?> showDataUser() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var username = sharedPreferences.getString('username');
     var response = await userRepository.showdataUser(username);
@@ -109,13 +119,14 @@ class UserService {
     var id = sharedPreferences.getInt('id');
     var response = await userRepository.updateDataKeamanan(
         username: username, password: password, id: id);
-    var responseDecoded = jsonDecode(response.body);
+    print(response.body);
+    var responsedecodedd = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      Get.snackbar('Success', responseDecoded['message'],
+      Get.snackbar('Success', responsedecodedd['message'],
           backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
       return true;
     } else {
-      Get.snackbar('failed', responseDecoded['message'],
+      Get.snackbar('failed',responsedecodedd['message'],
           backgroundColor: ColorHelpers.colorSnackbarfailed,
           colorText: Colors.white);
       return false;

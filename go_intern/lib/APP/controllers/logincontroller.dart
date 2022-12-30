@@ -85,7 +85,6 @@ class LoginController extends GetxController {
           colorText: Colors.white, backgroundColor: ColorHelpers.colorSnackbar);
       LoginResponse dataPencariMagang = LoginResponse.fromJson(data);
       var tentangSaya = dataPencariMagang.body[0][0].tentangSaya;
-
       dataList[0] = tentangSaya;
       var response =
           await skilService.showSkill(dataPencariMagang.body[0][0].id);
@@ -112,40 +111,47 @@ class LoginController extends GetxController {
       print(sharedPreferences.getString('jenis_kelamin'));
       sharedPreferences.setString('passwordData', passC.text);
       dashC.checkFoto();
+      dashC.showDataUser();
       Get.off(HomePageScrenn.new);
     }
   }
 
-  logout() {
+  logout() async {
     //clear data list , to remove update option
     dataList[0] = "";
     dataList[1] = "";
     dataList[2] = "";
     dataList[3] = "";
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.clear();
+    sharedPreferences.remove('username');
     judulC.clear();
+    usC.clear();
+    passC.clear();
+    deskripsiC.clear();
   }
 
-  showDatajurusan() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var id = sharedPreferences.getInt('id');
-    var response = await userService.showDataSekolah(id);
-    Map<String, dynamic> decoded = jsonDecode(response.body);
-    decoded.forEach(
-      (key, value) {
-        datajurusanTemp.add(value);
-      },
-    );
-    if (response.statusCode == 200) {
-      var dataResponse = jsonDecode(response.body);
-      dataList[1] = dataResponse['body'][0]['jurusan'];
-      dataSekolahUser.addAll(dataResponse);
-      if (dataResponse['body'][0]['deskripsi'] != null) {
-        deskripsiC.text = dataResponse['body'][0]['deskripsi'];
-      } else {
-        print('null');
-      }
-    }
-  }
+  // showDatajurusan() async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   var id = sharedPreferences.getInt('id');
+  //   var response = await userService.showDataSekolah(id);
+  //   Map<String, dynamic> decoded = jsonDecode(response.body);
+  //   decoded.forEach(
+  //     (key, value) {
+  //       datajurusanTemp.add(value);
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     var dataResponse = jsonDecode(response.body);
+  //     dataList[1] = dataResponse['body'][0]['jurusan'];
+  //     dataSekolahUser.addAll(dataResponse);
+  //     if (dataResponse['body'][0]['deskripsi'] != null) {
+  //       deskripsiC.text = dataResponse['body'][0]['deskripsi'];
+  //     } else {
+  //       print('null');
+  //     }
+  //   }
+  // }
 
   updateDeskripsiSekolah() async {
     var response = await userService.updateDeskripsiSekolah(deskripsiC.text);
@@ -154,12 +160,28 @@ class LoginController extends GetxController {
 
   succesLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    showDatajurusan();
+    // showDatajurusan();
     nama.value = sharedPreferences.getString('nama')!;
     sharedPreferences.setBool('login', true);
-    getDatPenghargaan();
+    // getDatPenghargaan();
     final userCon = Get.put(UserController());
-    userCon.showSekolahUser();
+    // userCon.showSekolahUser();
+  }
+
+  getDatPenghargaan(penghargaan) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var idPenghargaan = sharedPreferences.getInt('penghargaan');
+    if (idPenghargaan != null) {
+      if (idPenghargaan != 0) {
+        dataList[3] = "ada datanya";
+        interactPenghargaan.value = idPenghargaan;
+        var dataPenghargaan =
+            await userService.showPenghargaanuser(idPenghargaan);
+        judulPenghargaan.value = dataPenghargaan.body[0].judul;
+        filenamePenghargaan.value = dataPenghargaan.body[0].file;
+        judulC.text = judulPenghargaan.value;
+      }
+    }
   }
 
   showPenghargaanByPencariMagang() async {
@@ -174,20 +196,6 @@ class LoginController extends GetxController {
     }
   }
 
-  getDatPenghargaan() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var idPenghargaan = sharedPreferences.getInt('penghargaan');
-    if (idPenghargaan != null) {
-      dataList[3] = "ada datanya";
-      interactPenghargaan.value = idPenghargaan;
-      var dataPenghargaan =
-          await userService.showPenghargaanuser(idPenghargaan);
-      judulPenghargaan.value = dataPenghargaan.body[0].judul;
-      filenamePenghargaan.value = dataPenghargaan.body[0].file;
-      judulC.text = judulPenghargaan.value;
-    }
-  }
-
   @override
   void onInit() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -199,7 +207,7 @@ class LoginController extends GetxController {
     ever(
       interactPendidikan,
       (callback) {
-        showDatajurusan();
+        // showDatajurusan();
       },
     );
     ever(
@@ -217,10 +225,11 @@ class LoginController extends GetxController {
       interactPenghargaan,
       (callback) async {
         await showPenghargaanByPencariMagang();
-        await getDatPenghargaan();
+        // await getDatPenghargaan();
       },
     );
   }
+
   @override
   void dispose() {
     super.dispose();

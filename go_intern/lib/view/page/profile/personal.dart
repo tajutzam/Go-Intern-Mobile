@@ -284,7 +284,6 @@ class PersonalScrenn extends StatelessWidget {
                     if (_form.currentState!.validate()) {
                       var response = await personalC.updateDataPersonal();
                       print(response);
-
                       if (response == true) {
                         SharedPreferences sharedPreferences =
                             await SharedPreferences.getInstance();
@@ -293,7 +292,6 @@ class PersonalScrenn extends StatelessWidget {
                         // ignore: use_build_context_synchronously
                         if (isClear) {
                           logC.logout();
-                          logC.dispose();
                           usC.dispose();
                           botC.tabIndex.value = 0;
                           Get.offNamed("/login");

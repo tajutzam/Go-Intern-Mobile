@@ -49,7 +49,6 @@ class SkillController extends GetxController {
   }
   @override
   void onInit() async {
-    
     super.onInit();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var response = await skilService.showSkill(sharedPreferences.getInt('id'));
@@ -63,6 +62,5 @@ class SkillController extends GetxController {
       dataSkil.add(tempMap);
       storageSkill.add(tempMap);
     }
-    print(dataSkil);
   }
 }

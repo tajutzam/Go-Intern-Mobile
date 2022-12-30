@@ -70,6 +70,7 @@ class RegisterController extends GetxController {
       Get.snackbar('Failed', "${responseData['message']}",
           backgroundColor: ColorHelpers.colorSnackbarfailed,
           colorText: Colors.white);
+      EasyLoading.dismiss();
     }
   }
 }

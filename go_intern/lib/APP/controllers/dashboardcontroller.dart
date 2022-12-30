@@ -11,6 +11,7 @@ import 'package:go_intern/APP/services/penyedia_service.dart';
 import 'package:go_intern/APP/services/user_service.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../model/user_response.dart';
 
 import '../model/magang_penyedia.dart';
 
@@ -30,6 +31,8 @@ class DashboardController extends GetxController {
   List<KategoriBody> kategory = [];
   KategoriService kategoriService = KategoriService();
 
+  var nama = "".obs;
+
   List<MagangLimitBody> dataMagangLimit = [];
 
   Future<Kategori> getKategori() async {
@@ -42,12 +45,31 @@ class DashboardController extends GetxController {
     if (resBol) {
       Get.snackbar('success', 'Berhasil mengganti foto profile',
           colorText: Colors.white, backgroundColor: ColorHelpers.colorSnackbar);
+      checkFoto();
     } else {
       Get.snackbar('failed', 'Gagal mengganti foto profile',
           colorText: Colors.white,
           backgroundColor: ColorHelpers.colorSnackbarfailed);
     }
   }
+
+  // getFotoUser() async {
+  //   Datauser? user = await userService.showDataUser();
+  //   if (user != null) {
+  //     var fotoData = user.body[0].foto;
+  //     // ignore: unnecessary_null_comparison
+  //     if (fotoData != null) {
+  //       foto.value = user.body[0].foto;
+  //     } else {
+  //       var jk = user.body[0].jenisKelamin;
+  //       if (jk == "P") {
+  //         foto.value = "woman.png";
+  //       } else {
+  //         foto.value = "man.png";
+  //       }
+  //     }
+  //   }
+  // }
 
   Future<Penyedia?> getPopularPenyedia() async {
     Penyedia? response = await penyediaService.getDataPopular();
@@ -66,26 +88,18 @@ class DashboardController extends GetxController {
   }
 
   checkFoto() async {
-    print('print check foto');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var id = sharedPreferences.getInt('id');
-    var datauser = await userService.findById(id);
-    if (datauser.body[0].foto == "") {
-      print('mull if');
-      if (sharedPreferences.getString('jenis_kelamin') != null) {
-        print('mi;asds');
-        if (sharedPreferences.getString('jenis_kelamin') == 'P') {
-          foto.value = "woman.png";
-        } else if (sharedPreferences.getString('jenis_kelamin') == 'L') {
-          foto.value = "man.png";
-        }
+    var datauser = await userService.showDataUser();
+    if (datauser?.body[0].foto == "null") {
+      var jk = datauser!.body[0].jenisKelamin;
+      if (jk == "L") {
+        foto.value = "man.png";
       } else {
-        print('jenis kelamin null');
+        foto.value = "woman.png";
       }
     } else {
-      print('foto in if');
-      print(datauser.body[0].foto);
-      foto.value = datauser.body[0].foto;
+      // print('foto in if');
+      // print(datauser.body[0].foto);
+      foto.value = datauser!.body[0].foto;
     }
   }
 
@@ -93,9 +107,18 @@ class DashboardController extends GetxController {
     MagangLimit1? data = await magangService.showMagangLimit();
     return data;
   }
+  showDataUser() async {
+    Datauser? userData = await userService.showDataUser();
+    if (userData != null) {
+      nama.value = userData.body[0].nama;
+    } else {
+      print("user null");
+    }
+  }
 
   @override
   void onInit() async {
+    showDataUser();
     getMagangLimit();
     getKategori();
     getPopularPenyedia();
