@@ -42,7 +42,7 @@ class MagangController extends GetxController {
     return response;
   }
 
-  Future<MagangMain> findbyKeyword() async {
+  Future<MagangMain?> findbyKeyword() async {
     return await magangService.findMagangByKeyword(keyword: keyword.value);
   }
 

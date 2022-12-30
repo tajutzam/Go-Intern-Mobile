@@ -72,7 +72,7 @@ class DataPencariMagang {
   int role;
   DateTime crateAdd;
   String updateAdd;
-  DateTime expiredToken;
+  String expiredToken;
   String tentangSaya;
   String nama;
   String foto;
@@ -96,7 +96,7 @@ class DataPencariMagang {
           role: json["role"],
           crateAdd: DateTime.parse(json["crate_add"]),
           updateAdd: json["update_add"],
-          expiredToken: DateTime.parse(json["expired_token"]),
+          expiredToken: json["expired_token"] ?? "no activate",
           tentangSaya: json['tentang-saya'] ?? '',
           nama: json['nama'] ?? 'null',
           foto: json['foto'] ?? 'null' , 

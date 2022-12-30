@@ -41,7 +41,7 @@ dependencies:
     sdk: flutter
   flutter_cached_pdfview: ^0.4.1
   flutter_easyloading: ^3.0.5
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
   geocoding: ^2.0.5
   geolocator: ^9.0.2
   get: ^4.6.5
@@ -61,6 +61,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 21
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.

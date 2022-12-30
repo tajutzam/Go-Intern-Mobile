@@ -47,9 +47,13 @@ class MagangService {
     }
   }
 
-  Future<MagangMain> findMagangByKeyword({required keyword}) async {
+  Future<MagangMain?> findMagangByKeyword({required keyword}) async {
     var response = await repository.findMagangByKeyword(keyword: keyword);
     print(response.statusCode);
-    return MagangMain.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return MagangMain.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
   }
 }

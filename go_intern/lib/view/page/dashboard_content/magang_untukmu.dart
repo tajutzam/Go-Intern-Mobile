@@ -157,7 +157,7 @@ class MagangUntukmu extends StatelessWidget {
                   }
                 },
               )
-            : FutureBuilder<MagangMain>(
+            : FutureBuilder<MagangMain?>(
                 future: magangController.findbyKeyword(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
@@ -257,7 +257,7 @@ class MagangUntukmu extends StatelessWidget {
                                           ],
                                         ),
                                         trailing: Text(
-                                          "${formated}",
+                                          formated,
                                         ),
                                       ),
                                       Padding(

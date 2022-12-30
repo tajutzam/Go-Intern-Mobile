@@ -75,7 +75,7 @@ class Body {
     int role;
     DateTime crateAdd;
     String updateAdd;
-    DateTime expiredToken;
+    String expiredToken;
     dynamic tentangSaya;
     String nama;
     String foto;
@@ -100,7 +100,7 @@ class Body {
         role: json["role"],
         crateAdd: DateTime.parse(json["crate_add"]),
         updateAdd: json["update_add"],
-        expiredToken: DateTime.parse(json["expired_token"]),
+        expiredToken: json["expired_token"] ?? "not activate with email",
         tentangSaya: json["tentang-saya"],
         nama: json["nama"],
         foto: json["foto"] ?? 'null',
@@ -126,7 +126,7 @@ class Body {
         "role": role,
         "crate_add": crateAdd.toIso8601String(),
         "update_add": updateAdd,
-        "expired_token": expiredToken.toIso8601String(),
+        "expired_token": expiredToken,
         "tentang-saya": tentangSaya,
         "nama": nama,
         "foto": foto,
