@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
@@ -41,16 +42,20 @@ class DashboardController extends GetxController {
   }
 
   getDataUser(ys, filename, path) async {
+    EasyLoading.showProgress(status: "Uploading", 0.3);
     var resBol = await useC.uploadImage(filename, path);
     if (resBol) {
+      EasyLoading.dismiss();
       Get.snackbar('success', 'Berhasil mengganti foto profile',
           colorText: Colors.white, backgroundColor: ColorHelpers.colorSnackbar);
       checkFoto();
     } else {
+      EasyLoading.dismiss();
       Get.snackbar('failed', 'Gagal mengganti foto profile',
           colorText: Colors.white,
           backgroundColor: ColorHelpers.colorSnackbarfailed);
     }
+    EasyLoading.dismiss();
   }
 
   // getFotoUser() async {
@@ -107,6 +112,7 @@ class DashboardController extends GetxController {
     MagangLimit1? data = await magangService.showMagangLimit();
     return data;
   }
+
   showDataUser() async {
     Datauser? userData = await userService.showDataUser();
     if (userData != null) {

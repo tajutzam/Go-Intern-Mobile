@@ -126,14 +126,14 @@ class UserService {
           backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
       return true;
     } else {
-      Get.snackbar('failed',responsedecodedd['message'],
+      Get.snackbar('failed', responsedecodedd['message'],
           backgroundColor: ColorHelpers.colorSnackbarfailed,
           colorText: Colors.white);
       return false;
     }
   }
 
-  updateCv({filename}) async {
+  Future<bool> updateCv({filename}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var username = sharedPreferences.getString('username');
     var response = await userRepository.updateCv(username, filename);
@@ -213,6 +213,26 @@ class UserService {
       return true;
     } else {
       EasyLoading.dismiss();
+      return false;
+    }
+  }
+
+  Future<bool> updatePasswordById({required password}) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = sharedPreferences.getInt('id');
+    var response =
+        await userRepository.updatePasswordById(password: password, id: id);
+    if (response.statusCode == 200) {
+      EasyLoading.dismiss();
+      // Get.snackbar(
+      //     'success', "Berhasil memperbarui password  , silahkan login ulang",
+      //     backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
+      return true;
+    } else {
+      // var message = jsonDecode(response.body);
+      // // Get.snackbar('success', "$message['message']",
+      // //     backgroundColor: ColorHelpers.colorSnackbarfailed,
+      // //     colorText: Colors.white);
       return false;
     }
   }

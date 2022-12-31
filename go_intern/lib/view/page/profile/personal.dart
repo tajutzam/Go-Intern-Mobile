@@ -292,7 +292,6 @@ class PersonalScrenn extends StatelessWidget {
                         // ignore: use_build_context_synchronously
                         if (isClear) {
                           logC.logout();
-                          usC.dispose();
                           botC.tabIndex.value = 0;
                           Get.offNamed("/login");
                         }

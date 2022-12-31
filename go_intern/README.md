@@ -1,16 +1,15 @@
-# go_intern
+# GO INTERN MOBILE FOR INTERN
+###### Aplikasi Go Intern MOBILE digunakan untuk para user / pencari magang yang ingin mencari magang di seluruh indonesia loh , caranya gampang kalian bisa menggunakan Aplikasi GO INTERN untuk mengetahui Data magang apa saja yang disebarkan oleh para Penyedia Magang 
 
-A new Flutter project.
+![dashboard](https://i.ibb.co/bPKjy9V/Screenshot-from-2022-12-31-22-27-55.png)
+ 
+ ## cara menginstall
+ #### sayang nya aplikasi ini belum rilis di playstore , jadi jika kalian berminat menggunakan aplikasi ini caranya kalian cukup lakukan cara ini
+1. Buka terminal
+2. copy link github ini
+3. ketik git clone *url yang di copy*
+4. Jalankan flutter pub get 
+5. Jalankan Aplikasi Flutter
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**GO INTERN**

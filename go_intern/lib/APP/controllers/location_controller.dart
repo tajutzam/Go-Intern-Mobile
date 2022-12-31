@@ -38,7 +38,6 @@ class LocationController extends GetxController {
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-
       List<Placemark> placeMark =
           await placemarkFromCoordinates(position.latitude, position.longitude);
       Placemark place = placeMark[0];

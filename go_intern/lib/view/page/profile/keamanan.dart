@@ -97,6 +97,12 @@ class KemananScrenn extends StatelessWidget {
                     ),
                     Obx(
                       () => TextFormField(
+                        validator: (value) {
+                          if (value != keamananC.passwordBaruC.text) {
+                            return "password harus sama";
+                          }
+                          return null;
+                        },
                         controller: keamananC.passwordBaruC,
                         obscureText: keamananC.showPwb.value,
                         decoration: InputDecoration(
@@ -177,7 +183,6 @@ class KemananScrenn extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       if (isClear) {
                         logC.logout();
-                        usC.dispose();
                         botC.tabIndex.value = 0;
                         Get.offNamed("/login");
                       }

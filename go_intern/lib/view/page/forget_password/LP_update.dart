@@ -90,7 +90,7 @@ class UpdateLupaPassword extends StatelessWidget {
                                   "berhasil memperbarui pasword silahkan login",
                                   backgroundColor: ColorHelpers.colorSnackbar,
                                   colorText: Colors.white);
-                              Get.offNamed("/login");
+                              Get.offAllNamed("/login");
                               EasyLoading.dismiss();
                             } else {
                               Get.snackbar('failed',

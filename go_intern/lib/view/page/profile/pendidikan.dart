@@ -92,8 +92,6 @@ class Pendidikan extends StatelessWidget {
                                     onPressed: () {
                                       Get.bottomSheet(
                                         BottomSheet(
-                                          animationController:
-                                              userC.animationController,
                                           onClosing: () {},
                                           builder: (context) => Container(
                                             height: 400,
@@ -191,7 +189,6 @@ class Pendidikan extends StatelessWidget {
                               print(newValue);
                               userC.sekolahTemp.value = newValue!;
                             },
-
                             dropdownDecoratorProps: DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(),
                             ),

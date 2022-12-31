@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/helpers/color.dart';
 import 'package:go_intern/helpers/url.dart';
@@ -124,7 +125,7 @@ class UserRepository {
     }
   }
 
-  Future<http.Response>showPenghargaan(int id) async {
+  Future<http.Response> showPenghargaan(int id) async {
     var url = "${UrlHelper.baseUrl}/penghargaan/findById";
     Map<String, int> data = {"id": id};
     var res = await http.post(Uri.parse(url), body: jsonEncode(data));
@@ -245,6 +246,17 @@ class UserRepository {
     var url = "${UrlHelper.baseUrl}/pencarimagang/resetpassword";
     var data = {"username": username, "password": password};
     var response = http.post(Uri.parse(url), body: jsonEncode(data));
+    return response;
+  }
+
+  Future<http.Response> updatePasswordById(
+      {required password, required id}) async {
+    var url = "${UrlHelper.baseUrl}/pencarimagang/updatepasswordid";
+    var data = {
+      "password" : password , 
+      "id" : id
+    };
+    var response = await http.post(Uri.parse(url) , body: jsonEncode(data));
     return response;
   }
 }

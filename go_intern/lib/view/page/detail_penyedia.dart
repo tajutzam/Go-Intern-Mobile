@@ -49,7 +49,7 @@ class DetailPenyediaPopular extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20 ,),
                 child: Container(
                   height: MediaQuery.of(context).size.height / 2,
                   width: double.infinity,
@@ -57,30 +57,28 @@ class DetailPenyediaPopular extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8)),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
+                    padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
+                    child: ListView(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 17),
-                          child: Center(
-                            child: SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                                fit: BoxFit.cover,
-                                imageUrl: UrlHelper.baseUrlImagePenyedia + foto,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(70),
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
+                        Center(
+                          child: SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              fit: BoxFit.cover,
+                              imageUrl:
+                                  UrlHelper.baseUrlImagePenyedia + foto,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                height: 70,
+                                width: 70,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(70),
+                                  image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover),
                                 ),
                               ),
                             ),
@@ -91,6 +89,7 @@ class DetailPenyediaPopular extends StatelessWidget {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Nama Perusahaan',
@@ -103,14 +102,15 @@ class DetailPenyediaPopular extends StatelessWidget {
                             SizedBox(
                               width: 10,
                             ),
-                            SizedBox(
-                              width: 200,
+                            Expanded(
                               child: Text(
                                 textAlign: TextAlign.end,
-                                namaPerusahaan.toString(),
+                                namaPerusahaan,
                                 maxLines: 1,
+                                softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
+                                  
                                     fontSize: 17,
                                     fontFamily: 'poppins',
                                     fontWeight: FontWeight.w500,
@@ -134,7 +134,6 @@ class DetailPenyediaPopular extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                   color: ColorHelpers.colorBlackText),
                             ),
-                          
                             SizedBox(
                               width: 200,
                               child: Text(
@@ -264,7 +263,8 @@ class DetailPenyediaPopular extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       dataMagang!.body[index].posisiMagang,
@@ -284,8 +284,8 @@ class DetailPenyediaPopular extends StatelessWidget {
                                               fontSize: 17,
                                               fontFamily: 'poppins',
                                               fontWeight: FontWeight.w500,
-                                              color:
-                                                  ColorHelpers.colorBlackText),
+                                              color: ColorHelpers
+                                                  .colorBlackText),
                                         ),
                                         Padding(
                                           padding:

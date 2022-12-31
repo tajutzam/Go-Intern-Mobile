@@ -112,6 +112,8 @@ class LoginController extends GetxController {
       sharedPreferences.setString('passwordData', passC.text);
       dashC.checkFoto();
       dashC.showDataUser();
+      var userC = Get.put(UserController());
+      userC.onInit();
       Get.off(HomePageScrenn.new);
     }
   }

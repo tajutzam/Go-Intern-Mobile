@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/model/findby_response.dart';
 import 'package:go_intern/APP/model/jurusan_response.dart';
@@ -17,15 +18,14 @@ import 'package:go_intern/helpers/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_response.dart';
 
-class UserController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class UserController extends GetxController with GetTickerProviderStateMixin {
   UserRepository userRepository = UserRepository();
   SekolahService sekolahService = SekolahService();
   JurusanService jurusanService = JurusanService();
   TextEditingController controller = TextEditingController();
   TextEditingController sekolahC = TextEditingController();
   TextEditingController deskripsiC = TextEditingController();
-  late final AnimationController animationController;
+
   UserService userService = UserService();
   String nama = "";
   var jenjang = "".obs;
@@ -72,6 +72,16 @@ class UserController extends GetxController
     }
   }
 
+  logout() {
+    data[0] = "";
+    data[1] = "";
+    data[2] = "";
+    data[3] = "";
+    judulPenghargaan.text = "";
+    sekolahTemp.value = "";
+    jurusanTemp.value = "";
+  }
+
   Future<bool> updateTentangSaya() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     id = sharedPreferences.getInt('id')!;
@@ -89,10 +99,6 @@ class UserController extends GetxController
   setDataSekolah() async {
     Sekolah response = await sekolahService.getAllData();
     for (var i = 0; i < response.data.length; i++) {
-      // if (regexSmk.hasMatch(response.dataSekolah[i].sekolah)) {
-      //   print('ada smk');
-      // }
-      print('add');
       dataSekolah.add(response.data[i].namaSekolah);
     }
   }
@@ -113,23 +119,20 @@ class UserController extends GetxController
     var res = await userService.uploadImage(filename, path);
     return res;
   }
-
   addSekolahIfNotExist(sekolah) async {
     var response = await sekolahService.addSekolah(sekolah);
-    print('oke');
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
       Get.snackbar('Succes', responseData['message']);
       dataSekolah.add(sekolah);
     }
   }
-
   getDatPenghargaan(id) async {
     PenghargaanResponse response = await userService.showPenghargaanuser(id);
     penghargaan.value = response.body[0].file;
     judulPenghargaan.text = response.body[0].judul;
   }
-
+  
   showDataUser() async {
     Datauser? userr = await userService.showDataUser();
     if (userr != null) {
@@ -217,16 +220,21 @@ class UserController extends GetxController
   addPennghargaan(filename, judul) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var username = sharedPreferences.getString('username');
-    return await userService.updatePenghargaan(filename, judul, username);
+    EasyLoading.showProgress(status: "Uploading", 0.3);
+    var res = await userService.updatePenghargaan(filename, judul, username);
+    EasyLoading.dismiss();
+    return res;
   }
 
-  addCv() async {
+  Future<bool> addCv() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getInt('id');
-    print(pathCv.value);
-    await userService.updateCv(filename: pathCv.value);
+    EasyLoading.showProgress(status: "Uploading", 0.3);
+    var isUpdate = await userService.updateCv(filename: pathCv.value);
     var responseId = await userService.findById(id);
     pathCv.value = responseId.body[0].cv;
+    EasyLoading.dismiss();
+    return isUpdate;
   }
 
   fetchDataCv() async {
@@ -248,7 +256,7 @@ class UserController extends GetxController
     await setDataJurusan();
     await fetchDataCv();
     print('on init run');
-    animationController = AnimationController(vsync: this);
+    AnimationController animationController = AnimationController(vsync: this);
     animationController.fling();
     // sekolahService.getDataCari('SMKN 1 Tegalsari');
     if (sharedPreferences.getString('tentang-saya') == null) {
@@ -268,11 +276,9 @@ class UserController extends GetxController
 
   @override
   void dispose() {
-    // ignore: todo
-    // TODO: implement dispose
+    super.dispose();
     judulPenghargaan.text = "";
     sekolahTemp.value = "";
     jurusanTemp.value = "";
-    print('dispose');
   }
 }

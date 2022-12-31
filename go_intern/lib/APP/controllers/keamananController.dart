@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/model/findById_response.dart';
 import 'package:go_intern/APP/services/user_service.dart';
+import 'package:go_intern/helpers/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeamananController extends GetxController {
@@ -18,10 +20,10 @@ class KeamananController extends GetxController {
   toogleB() {
     showPwb.value = !showPwb.value;
   }
+
   toogleK() {
     showPwK.value = !showPwK.value;
   }
-  
   fetchData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = sharedPreferences.getInt('id');
@@ -32,20 +34,60 @@ class KeamananController extends GetxController {
   }
 
   Future<bool> updateKeamanan() async {
-    if (passwordBaruC.text != konfirmasiPasswordC.text) {
-      Get.snackbar('Failed', 'Konfirmasi password harus sama');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var userNam = sharedPreferences.getString('username');
+    if (usernameC.text != userNam &&
+        passwordBaruC.text.isEmpty &&
+        konfirmasiPasswordC.text.isEmpty) {
+      EasyLoading.show(status: 'Tunggu sebentar . . .');
+      EasyLoading.dismiss();
+      return await userService.updateDataKeamanan(
+          usernameC.text, passwordBaruC.text);
+    } else if (usernameC.text == userNam &&
+        passwordBaruC.text.isEmpty &&
+        konfirmasiPasswordC.text.isEmpty) {
+      EasyLoading.dismiss();
+      Get.snackbar('failed', 'Tidak ada perubahan data',
+          backgroundColor: ColorHelpers.colorSnackbarfailed,
+          colorText: Colors.white);
       return false;
-    } else {
-      if (passwordBaruC.text.isEmpty) {
-        var response =
-            userService.updateDataKeamanan(usernameC.text, passwordLama.value);
-            print("${response}keamanan");
-        return response;
+    } else if (usernameC.text == userNam && passwordBaruC.text.isNotEmpty) {
+      if (konfirmasiPasswordC.text.isEmpty) {
+        Get.snackbar('Failed', "Harap isi Konfirmasi password",
+            backgroundColor: ColorHelpers.colorSnackbarfailed,
+            colorText: Colors.white);
+        EasyLoading.dismiss();
+        return false;
       } else {
-        var response =
-            userService.updateDataKeamanan(usernameC.text, passwordBaruC.text);
-                print("${response}keamanan");
-        return response;
+        if (passwordBaruC.text == konfirmasiPasswordC.text) {
+          if (passwordBaruC.text == passwordLama.value) {
+            Get.snackbar('Failed', "Tidak ada perubahan password",
+                backgroundColor: ColorHelpers.colorSnackbarfailed,
+                colorText: Colors.white);
+            EasyLoading.dismiss();
+            return false;
+          } else {
+            EasyLoading.show(status: "Tunggu sebentar . . .");
+            EasyLoading.dismiss();
+            return await userService.updatePasswordById(
+                password: passwordBaruC.text);
+          }
+        } else {
+          print("As");
+          Get.snackbar('failed', 'Password harus sama',
+              backgroundColor: ColorHelpers.colorSnackbarfailed,
+              colorText: Colors.white);
+          return false;
+        }
+      }
+    } else {
+      if (passwordBaruC.text == konfirmasiPasswordC.text) {
+        await userService.updateDataKeamanan(
+            usernameC.text, passwordBaruC.text);
+        await userService.updatePasswordById(password: passwordBaruC.text);
+        return true;
+      } else {
+        return false;
       }
     }
   }

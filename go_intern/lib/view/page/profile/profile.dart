@@ -3,8 +3,10 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_intern/APP/controllers/UserController.dart';
 import 'package:go_intern/APP/controllers/dashboardcontroller.dart';
@@ -237,10 +239,16 @@ class ProfilePage extends StatelessWidget {
                                 onPressed: () async {
                                   FilePickerResult? result =
                                       await FilePicker.platform.pickFiles(
-                                          type: FileType.any,
-                                          allowMultiple: false,
-                                          dialogTitle: 'Select File Pendukung',
-                                          allowCompression: true);
+                                      
+                                    type: FileType.any,
+                                    allowMultiple: false,
+                                    dialogTitle: 'Select File Pendukung',
+                                    allowCompression: true,
+                                    onFileLoading: (p0) {
+                                      EasyLoading.show(
+                                          status: "Tunggu sebentar . . .");
+                                    },
+                                  );
                                   if (result != null) {
                                     if (result.files.single.extension != 'pdf' &&
                                         result.files.single.extension !=
@@ -258,7 +266,9 @@ class ProfilePage extends StatelessWidget {
                                       // todo input file penghargaan
                                       usC.pathCv.value =
                                           result.files.single.path!;
-                                      usC.addCv();
+                                      EasyLoading.show(status: "Tunggu sebentar");
+                                    await usC.addCv();
+
                                       // userC.addPennghargaan(result.files.single.path);
                                     }
                                   } else {
@@ -508,7 +518,7 @@ class ProfilePage extends StatelessWidget {
                             logC.interactPenghargaan.value = 0;
                             sharedPreferences.remove('penghargaan');
                             logC.logout();
-                            usC.dispose();
+                            usC.logout();
                             botC.tabIndex.value = 0;
                             Get.snackbar('Sucess', 'Berhasil logout',
                                 backgroundColor: ColorHelpers.colorSnackbar,
