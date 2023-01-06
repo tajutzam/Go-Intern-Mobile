@@ -23,14 +23,14 @@ class SkillController extends GetxController {
     bool response = false;
     if (storageSkill.length == list.length) {
       response = false;
-      print('sama length');
+    
     } else {
       for (int i = storageSkill.length; i < list.length; i++) {
         Map<String, dynamic> tempMap = {'id': 0, 'skill': list[i]['skill']};
         newlist.add(tempMap);
       }
       response = await skilService.addSkill(newlist, id);
-      print(response);
+     
     }
     if (response == true) {
       dataSkil.clear();

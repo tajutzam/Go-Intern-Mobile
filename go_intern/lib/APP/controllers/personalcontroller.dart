@@ -29,28 +29,16 @@ class PersonalController extends GetxController {
         agamaC.text = userData.body[0].agama;
       }
     } else {
-      print('data iser null');
     }
   }
 
   updateDataPersonal() async {
-    print(namalengkapC.text);
-    print(agamaC.text);
-    print(emaillengkapC.text);
-    print(jenisKelamin.value);
-    print(tanggalLahirC.text);
     var response = await userService.updateDataPersonal(
         name: namalengkapC.text,
         agama: agamaC.text,
         email: emaillengkapC.text,
         jenisKelamin: jenisKelamin.value,
         tanggalLahir: tanggalLahirC.text);
-
     return response;
-  }
-  @override
-  void onInit() async {
-    super.onInit();
-    // fetchdataUser();
   }
 }

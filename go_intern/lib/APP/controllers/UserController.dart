@@ -114,14 +114,13 @@ class UserController extends GetxController with GetTickerProviderStateMixin {
     var result = await sekolahService.getDataCari(key);
     return result;
   }
-
   uploadImage(filename, path) async {
     var res = await userService.uploadImage(filename, path);
     return res;
   }
   addSekolahIfNotExist(sekolah) async {
     var response = await sekolahService.addSekolah(sekolah);
-    if (response.statusCode == 200) {
+     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
       Get.snackbar('Succes', responseData['message']);
       dataSekolah.add(sekolah);
@@ -153,7 +152,7 @@ class UserController extends GetxController with GetTickerProviderStateMixin {
     if (res.statusCode == 200) {
       var data = jsonDecode(res.body);
       jurusanTemp.value = data['jurusan'];
-      print(data['jurusan']);
+   
     } else {}
   }
 
@@ -170,14 +169,14 @@ class UserController extends GetxController with GetTickerProviderStateMixin {
   addSekolahToJurusan(sekolah, jurusan) async {
     // search data sekolah by nama
     // searcyhb data jurusan by nama
-    print(sekolah);
+   
     var responseSekolah = await sekolahService.cariSekolah(sekolah);
     var responseJurusan = await jurusanService.findByJurusan(jurusan);
     var decodedjurusan = jsonDecode(responseJurusan.body);
     var decodedSekolah = jsonDecode(responseSekolah.body);
     var response = await sekolahService.addJurusanToSekolah(
         decodedSekolah['body'][0]['id'], decodedjurusan['body'][0]['id']);
-    print(response.body);
+    
     data[1] = "asdasd";
   }
 

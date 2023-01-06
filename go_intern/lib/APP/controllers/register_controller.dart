@@ -30,14 +30,14 @@ class RegisterController extends GetxController {
   }
 
   register() async {
-    String urlRegister = UrlHelper.baseUrl + "/mobile/register";
+    String urlRegister = "${UrlHelper.baseUrl}/mobile/register";
     var jkvalue;
     if (jenisKelamin.value == "Laki-Laki") {
       jkvalue = "L";
+    // ignore: unrelated_type_equality_checks
     } else if (jenisKelamin == "Perempuan") {
       jkvalue = "P";
     }
-    print(jkvalue);
     Map<String, dynamic> dataRegister = {
       "tanggal_lahir": controller.text.toString(),
       "username": usC.text,
@@ -48,7 +48,7 @@ class RegisterController extends GetxController {
       "nama_belakang": namaBC.text,
       "jenis_kelamin": jkvalue
     };
-    print(dataRegister);
+   
     var response = await http.post(Uri.parse(urlRegister),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -56,7 +56,6 @@ class RegisterController extends GetxController {
         body: jsonEncode(dataRegister));
     var urlSendEmail = "${UrlHelper.baseUrl}/verivication/${usC.text}";
     Map<String, dynamic> responseData = json.decode(response.body);
-    print(response.body);
     EasyLoading.show(status: "loading . . . ");
     if (responseData['status'] == "oke") {
       var responseSendMail = await http.get(Uri.parse(urlSendEmail));
@@ -66,7 +65,6 @@ class RegisterController extends GetxController {
       EasyLoading.dismiss();
       Get.offNamed("/login");
     } else if (responseData['status'] == 'failed') {
-      print("ok");
       Get.snackbar('Failed', "${responseData['message']}",
           backgroundColor: ColorHelpers.colorSnackbarfailed,
           colorText: Colors.white);

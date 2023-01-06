@@ -75,7 +75,6 @@ class MagangController extends GetxController {
       keyword,
       (callback) async {
         await findbyKeyword();
-        print(keyword);
       },time: Duration(seconds: 1)
     );
   }
