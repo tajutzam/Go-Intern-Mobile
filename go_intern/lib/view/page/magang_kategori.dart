@@ -73,8 +73,8 @@ class MagangByKategori extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(6))),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: ListView(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ListTile(
                               title: Padding(

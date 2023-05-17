@@ -229,10 +229,6 @@ class UserService {
       //     backgroundColor: ColorHelpers.colorSnackbar, colorText: Colors.white);
       return true;
     } else {
-      // var message = jsonDecode(response.body);
-      // // Get.snackbar('success', "$message['message']",
-      // //     backgroundColor: ColorHelpers.colorSnackbarfailed,
-      // //     colorText: Colors.white);
       return false;
     }
   }
